@@ -9,105 +9,100 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        :root { --gold: #ffcc00; --dark: #01080e; --glass: rgba(255, 255, 255, 0.05); }
+        :root { --gold: #ffcc00; --dark: #01080e; --glass: rgba(255, 255, 255, 0.07); }
         body { background: var(--dark); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         
         .glass-card { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; }
-        .btn-gold { background: linear-gradient(45deg, #ffcc00, #ff9900); color: black; font-weight: bold; border: none; border-radius: 12px; }
+        .btn-gold { background: linear-gradient(45deg, #ffcc00, #ff9900); color: black; font-weight: bold; border: none; border-radius: 12px; padding: 10px; }
         
         /* Navigasi Bawah */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(1, 8, 14, 0.95); border-top: 1px solid var(--glass); display: flex; justify-content: space-around; padding: 10px 0; z-index: 100; }
-        .nav-item { color: #888; text-decoration: none; text-align: center; font-size: 12px; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #01080e; border-top: 1px solid var(--glass); display: flex; justify-content: space-around; padding: 12px 0; z-index: 999; }
+        .nav-item { color: #666; text-decoration: none; text-align: center; font-size: 11px; cursor: pointer; }
         .nav-item.active { color: var(--gold); }
 
-        section { display: none; padding: 20px; padding-bottom: 100px; }
-        .active-section { display: block; animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        section { display: none; padding: 20px 15px 100px 15px; }
+        .active-section { display: block !important; }
 
-        .chat-area { height: 300px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
+        .prod-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; margin-bottom: 12px; }
+        .chat-box { height: 300px; overflow-y: auto; background: rgba(0,0,0,0.4); border-radius: 15px; padding: 15px; }
     </style>
 </head>
 <body>
 
-<div id="authSection" class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+<div id="authPage" class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
     <div class="glass-card w-100" style="max-width: 380px;">
         <h2 class="text-center text-warning fw-bold mb-4">IRANVEST</h2>
-        <div id="loginBox">
-            <input type="text" id="userIn" class="form-control mb-3 bg-dark text-white" placeholder="Username">
-            <input type="password" id="passIn" class="form-control mb-3 bg-dark text-white" placeholder="Password">
-            <button class="btn btn-gold w-100 mb-3" onclick="handleLogin()">MASUK</button>
-            <p class="text-center small">Baru di sini? <a href="#" class="text-warning" onclick="toggleReg(true)">Daftar Akun</a></p>
+        
+        <div id="loginForm">
+            <input type="text" id="userL" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username">
+            <input type="password" id="passL" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Password">
+            <button class="btn btn-gold w-100" onclick="doLogin()">MASUK</button>
+            <p class="text-center mt-3 small">Belum punya akun? <a href="javascript:void(0)" class="text-warning" onclick="toggleReg(true)">Daftar Akun</a></p>
         </div>
-        <div id="regBox" style="display:none;">
-            <input type="text" id="userReg" class="form-control mb-3 bg-dark text-white" placeholder="Username Baru">
-            <input type="password" id="passReg" class="form-control mb-3 bg-dark text-white" placeholder="Password Baru">
-            <button class="btn btn-gold w-100 mb-3" onclick="handleReg()">DAFTAR SEKARANG</button>
-            <p class="text-center small">Sudah punya akun? <a href="#" class="text-warning" onclick="toggleReg(false)">Login</a></p>
+
+        <div id="regForm" style="display:none;">
+            <input type="text" id="userR" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username Baru">
+            <input type="password" id="passR" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Password Baru">
+            <button class="btn btn-gold w-100" onclick="doReg()">DAFTAR SEKARANG</button>
+            <p class="text-center mt-3 small">Sudah ada akun? <a href="javascript:void(0)" class="text-warning" onclick="toggleReg(false)">Login</a></p>
         </div>
     </div>
 </div>
 
-<div id="appSection" style="display: none;">
+<div id="appPage" style="display: none;">
     <div class="container py-3 d-flex justify-content-between align-items-center">
-        <span class="fw-bold text-warning"><i class="fas fa-gem me-1"></i> DANIEL TECH</span>
-        <span class="badge bg-secondary" id="displayUser">User</span>
+        <span class="fw-bold text-warning">DANIEL TECH</span>
+        <span class="badge bg-secondary" id="uName">User</span>
     </div>
 
-    <section id="sec-home" class="active-section">
+    <section id="home" class="active-section">
         <div class="glass-card text-center mb-4">
             <p class="text-secondary small mb-1">TOTAL SALDO</p>
-            <h1 class="fw-bold" id="valSaldo">Rp 0</h1>
+            <h1 class="fw-bold" id="uSaldo">Rp 0</h1>
         </div>
-        <h6 class="fw-bold mb-3">PAKET INVESTASI</h6>
-        <div id="productContainer">
-            <p class="text-center text-secondary small">Memuat produk...</p>
-        </div>
+        <h6 class="fw-bold mb-3">LIST PRODUK</h6>
+        <div id="listProduk"><p class="small text-secondary">Memuat data...</p></div>
     </section>
 
-    <section id="sec-depo">
-        <h5 class="fw-bold mb-4">Pilih Nominal Top Up</h5>
+    <section id="deposit">
+        <h5 class="fw-bold mb-4">Deposit Saldo</h5>
         <div class="row g-2">
-            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="sendDepo(10000)">10k</button></div>
-            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="sendDepo(20000)">20k</button></div>
-            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="sendDepo(50000)">50k</button></div>
-            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="sendDepo(100000)">100k</button></div>
-            <div class="col-12"><button class="btn btn-gold w-100" onclick="sendDepo(1000000)">1 Juta (VIP)</button></div>
-        </div>
-        <div class="mt-4 p-3 glass-card text-center border-warning">
-            <small class="text-secondary">Tujuan DANA Admin:</small><br>
-            <span class="fw-bold">0857-1443-8874</span>
+            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="reqDep(10000)">10k</button></div>
+            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="reqDep(20000)">20k</button></div>
+            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="reqDep(50000)">50k</button></div>
+            <div class="col-6"><button class="btn glass-card w-100 text-white" onclick="reqDep(100000)">100k</button></div>
+            <div class="col-12"><button class="btn btn-gold w-100" onclick="reqDep(1000000)">Rp 1.000.000</button></div>
         </div>
     </section>
 
-    <section id="sec-wd">
+    <section id="withdraw">
         <h5 class="fw-bold mb-4">Penarikan Dana</h5>
         <div class="glass-card">
-            <label class="small text-secondary mb-2">Nominal WD:</label>
-            <select id="wdAmt" class="form-select bg-dark text-white border-secondary mb-3">
+            <select id="amtWD" class="form-select bg-dark text-white border-secondary mb-3">
                 <option value="50000">Rp 50.000</option>
                 <option value="100000">Rp 100.000</option>
                 <option value="1000000">Rp 1.000.000</option>
             </select>
-            <input type="text" id="wdDest" class="form-control bg-dark text-white border-secondary mb-3" placeholder="No DANA / Rekening">
-            <button class="btn btn-gold w-100" onclick="sendWD()">TARIK DANA</button>
+            <input type="text" id="bankWD" class="form-control bg-dark text-white border-secondary mb-3" placeholder="No Rek / DANA">
+            <button class="btn btn-gold w-100" onclick="reqWD()">TARIK SEKARANG</button>
         </div>
     </section>
 
-    <section id="sec-chat">
-        <h5 class="fw-bold mb-3">Live Chat Support</h5>
-        <div class="chat-area" id="boxChat"></div>
+    <section id="chat">
+        <h5 class="fw-bold mb-3">Live Support</h5>
+        <div class="chat-box mb-3" id="boxChat"></div>
         <div class="input-group">
-            <input type="text" id="msgChat" class="form-control bg-dark text-white" placeholder="Pesan...">
-            <button class="btn btn-gold" onclick="postChat()"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" id="inChat" class="form-control bg-dark text-white border-secondary" placeholder="Tulis...">
+            <button class="btn btn-gold" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </section>
 
     <div class="bottom-nav">
-        <a href="#" class="nav-item active" onclick="changeSec('sec-home', this)"><i class="fas fa-home fa-lg"></i><br>Beranda</a>
-        <a href="#" class="nav-item" onclick="changeSec('sec-depo', this)"><i class="fas fa-plus-circle fa-lg"></i><br>Deposit</a>
-        <a href="#" class="nav-item" onclick="changeSec('sec-wd', this)"><i class="fas fa-hand-holding-usd fa-lg"></i><br>Withdraw</a>
-        <a href="#" class="nav-item" onclick="changeSec('sec-chat', this)"><i class="fas fa-comment-dots fa-lg"></i><br>Chat</a>
-        <a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt fa-lg"></i><br>Keluar</a>
+        <div class="nav-item active" onclick="go('home', this)"><i class="fas fa-home fa-lg"></i><br>Home</div>
+        <div class="nav-item" onclick="go('deposit', this)"><i class="fas fa-wallet fa-lg"></i><br>Deposit</div>
+        <div class="nav-item" onclick="go('withdraw', this)"><i class="fas fa-money-bill fa-lg"></i><br>WD</div>
+        <div class="nav-item" onclick="go('chat', this)"><i class="fas fa-comment-dots fa-lg"></i><br>Chat</div>
+        <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt fa-lg"></i><br>Keluar</div>
     </div>
 </div>
 
@@ -115,7 +110,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // KONFIGURASI FIREBASE DANIEL
     const firebaseConfig = {
         apiKey: "AIzaSyCwrvbPBNwB0r7PSdFBqa4wS2gag-MmpDE",
         authDomain: "my-invest-database.firebaseapp.com",
@@ -128,70 +122,64 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let currentSession = localStorage.getItem("uSess");
+    let sess = localStorage.getItem("uSess");
 
-    // FUNGSI AUTH
-    function toggleReg(show) {
-        document.getElementById('loginBox').style.display = show ? 'none' : 'block';
-        document.getElementById('regBox').style.display = show ? 'block' : 'none';
+    // AUTH LOGIC
+    function toggleReg(s) {
+        document.getElementById('loginForm').style.display = s ? 'none' : 'block';
+        document.getElementById('regForm').style.display = s ? 'block' : 'none';
     }
 
-    function handleReg() {
-        const u = document.getElementById('userReg').value;
-        const p = document.getElementById('passReg').value;
-        if(u && p) {
-            db.ref('users/'+u).set({ username: u, password: p, saldo: 0 }).then(() => {
-                alert("Daftar Berhasil! Silakan Login.");
-                location.reload();
-            });
-        }
+    window.doReg = function() {
+        const u = document.getElementById('userR').value;
+        const p = document.getElementById('passR').value;
+        if(!u || !p) return alert("Isi semua!");
+        db.ref('users/'+u).set({username:u, password:p, saldo:0}).then(()=>{
+            alert("Berhasil! Silakan Login.");
+            location.reload();
+        });
     }
 
-    function handleLogin() {
-        const u = document.getElementById('userIn').value;
-        const p = document.getElementById('passIn').value;
+    window.doLogin = function() {
+        const u = document.getElementById('userL').value;
+        const p = document.getElementById('passL').value;
         db.ref('users/'+u).once('value', s => {
             if(s.exists() && s.val().password === p) {
                 localStorage.setItem("uSess", u);
                 location.reload();
-            } else alert("Akun tidak ditemukan atau salah password!");
+            } else alert("User/Pass salah!");
         });
     }
 
-    // FUNGSI NAVIGASI
-    function changeSec(id, el) {
+    // NAV LOGIC
+    window.go = function(id, el) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active-section'));
         document.getElementById(id).classList.add('active-section');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
     }
 
-    // JIKA USER LOGIN
-    if(currentSession) {
-        document.getElementById('authSection').style.display = 'none';
-        document.getElementById('appSection').style.display = 'block';
-        document.getElementById('displayUser').innerText = currentSession;
+    // CORE DATA
+    if(sess) {
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('appPage').style.display = 'block';
+        document.getElementById('uName').innerText = sess;
 
-        // Sync Saldo
-        db.ref('users/'+currentSession+'/saldo').on('value', s => {
-            document.getElementById('valSaldo').innerText = "Rp " + (s.val() || 0).toLocaleString();
+        // Saldo
+        db.ref('users/'+sess+'/saldo').on('value', s => {
+            document.getElementById('uSaldo').innerText = "Rp " + (s.val() || 0).toLocaleString();
         });
 
-        // Sync Produk (Folder: stockproduct)
+        // Produk
         db.ref('stockproduct').on('value', s => {
-            const container = document.getElementById('productContainer');
-            container.innerHTML = "";
-            if(!s.exists()) {
-                container.innerHTML = "<p class='text-center small text-secondary mt-3'>Belum ada produk aktif.</p>";
-            }
+            const list = document.getElementById('listProduk');
+            list.innerHTML = "";
+            if(!s.exists()) list.innerHTML = "<p class='small text-secondary'>Belum ada paket.</p>";
             s.forEach(p => {
                 const d = p.val();
-                container.innerHTML += `
-                <div class="glass-card mb-2 d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="m-0 fw-bold">${d.nama}</h6>
-                        <small class="text-warning">Profit: ${d.profit}%</small>
-                    </div>
+                list.innerHTML += `
+                <div class="prod-card d-flex justify-content-between align-items-center">
+                    <div><h6 class="m-0">${d.nama}</h6><small class="text-warning">Profit: ${d.profit}%</small></div>
                     <div class="text-end">
                         <small class="d-block mb-1">Rp ${parseInt(d.harga).toLocaleString()}</small>
                         <button class="btn btn-sm btn-gold px-3" onclick="alert('Saldo tidak cukup')">BELI</button>
@@ -200,51 +188,43 @@
             });
         });
 
-        // Deposit & WD
-        window.sendDepo = (amt) => {
-            db.ref('transactions/'+currentSession+'/T'+Date.now()).set({
-                type: "DEPOSIT", amount: amt, status: "PENDING", date: new Date().toLocaleDateString()
-            }).then(() => alert("Berhasil! Hubungi admin untuk konfirmasi transfer Rp " + amt.toLocaleString()));
-        };
+        // Transaksi
+        window.reqDep = (a) => {
+            db.ref('transactions/'+sess+'/T'+Date.now()).set({type:"DEPOSIT", amount:a, status:"PENDING", date:new Date().toLocaleDateString()})
+            .then(()=>alert("Request Terkirim!"));
+        }
 
-        window.sendWD = () => {
-            const amt = document.getElementById('wdAmt').value;
-            const dest = document.getElementById('wdDest').value;
-            if(!dest) return alert("Masukkan nomor tujuan!");
-            db.ref('transactions/'+currentSession+'/T'+Date.now()).set({
-                type: "WITHDRAW", amount: amt, status: "PROSES", target: dest, date: new Date().toLocaleDateString()
-            }).then(() => alert("Permintaan penarikan sedang diproses."));
-        };
+        window.reqWD = () => {
+            const a = document.getElementById('amtWD').value;
+            const b = document.getElementById('bankWD').value;
+            if(!b) return alert("Isi nomor tujuan!");
+            db.ref('transactions/'+sess+'/T'+Date.now()).set({type:"WITHDRAW", amount:a, target:b, status:"PROSES", date:new Date().toLocaleDateString()})
+            .then(()=>alert("WD Diproses!"));
+        }
 
-        // Chat System
-        window.postChat = () => {
-            const msg = document.getElementById('msgChat').value;
-            if(!msg) return;
-            db.ref('chats/'+currentSession+'/C'+Date.now()).set({
-                sender: currentSession, text: msg, time: new Date().toLocaleTimeString()
-            });
-            document.getElementById('msgChat').value = "";
-        };
+        // Chat
+        window.sendChat = () => {
+            const t = document.getElementById('inChat').value;
+            if(!t) return;
+            db.ref('chats/'+sess+'/M'+Date.now()).set({sender:sess, text:t, time:new Date().toLocaleTimeString()});
+            document.getElementById('inChat').value = "";
+        }
 
-        db.ref('chats/'+currentSession).on('value', s => {
+        db.ref('chats/'+sess).on('value', s => {
             const box = document.getElementById('boxChat');
             box.innerHTML = "";
             s.forEach(m => {
                 const d = m.val();
-                const isMe = d.sender === currentSession;
-                box.innerHTML += `
-                <div class="mb-2 ${isMe ? 'text-end' : ''}">
-                    <div class="p-2 d-inline-block rounded-3 small" style="background:${isMe ? '#ffcc00' : '#333'}; color:${isMe ? '#000' : '#fff'}">
-                        ${d.text}
-                    </div>
+                const me = d.sender === sess;
+                box.innerHTML += `<div class="mb-2 ${me?'text-end':''}">
+                    <div class="p-2 d-inline-block rounded-3 small" style="background:${me?'#ffcc00':'#333'};color:${me?'#000':'#fff'}">${d.text}</div>
                 </div>`;
             });
             box.scrollTop = box.scrollHeight;
         });
     }
 
-    function logout() { localStorage.clear(); location.reload(); }
+    window.logout = () => { localStorage.clear(); location.reload(); }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
