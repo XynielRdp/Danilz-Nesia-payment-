@@ -6,24 +6,28 @@
     <title>Login - DANILZ NESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // CONFIG DANIL (SUDAH TERPASANG)
         const firebaseConfig = {
           apiKey: "AIzaSyBY7FaSViddpNqnncQ8Vtfp4Jmt7pJ6a80",
           authDomain: "danilz-nesia.firebaseapp.com",
           projectId: "danilz-nesia",
           storageBucket: "danilz-nesia.firebasestorage.app",
           messagingSenderId: "796392081651",
-          appId: "1:796392081651:web:a36a4545ddf92d97910f86"
+          appId: "1:796392081651:web:a36a4545ddf92d97910f86",
+          measurementId: "G-PSMD9SWSE6"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // DAFTAR
         window.handleRegister = async () => {
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-pass').value;
@@ -31,50 +35,55 @@
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users", userCredential.user.uid), {
-                    nama: nama, email: email, balance: 0, role: "player"
+                    nama: nama, email: email, balance: 0
                 });
-                alert("Daftar Berhasil! Saldo: Rp 0");
-                window.location.href = "shop.html";
-            } catch (e) { alert("Gagal: " + e.message); }
+                alert("Daftar Berhasil!");
+                location.reload();
+            } catch (e) { alert("Error: " + e.message); }
         };
 
+        // LOGIN
         window.handleLogin = async () => {
             const email = document.getElementById('log-email').value;
             const pass = document.getElementById('log-pass').value;
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
                 window.location.href = "shop.html";
-            } catch (e) { alert("Login Gagal!"); }
+            } catch (e) { alert("Email atau Password salah!"); }
         };
     </script>
+    
     <style>
         body { background: #05070a; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; }
-        .input-field { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); width: 100%; border-radius: 1rem; padding: 1rem; outline: none; margin-bottom: 10px; }
+        .input-f { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); width: 100%; border-radius: 1rem; padding: 1rem; outline: none; margin-bottom: 10px; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-6">
     <div class="max-w-md w-full glass rounded-[2.5rem] p-8 shadow-2xl">
-        <h1 class="text-3xl font-black italic text-center text-[#FFD700] mb-8">DANILZ NESIA</h1>
+        <h1 class="text-3xl font-black italic text-center text-[#FFD700] mb-6">DANILZ NESIA</h1>
+        
         <div id="login-form">
-            <input type="email" id="log-email" placeholder="Email" class="input-field">
-            <input type="password" id="log-pass" placeholder="Password" class="input-field">
-            <button onclick="handleLogin()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase mt-4">Login</button>
-            <p class="text-center text-xs text-gray-500 mt-4">Belum punya akun? <a href="#" onclick="toggleForm('register')" class="text-yellow-500 font-bold">Daftar</a></p>
+            <input type="email" id="log-email" placeholder="Email" class="input-f">
+            <input type="password" id="log-pass" placeholder="Password" class="input-f">
+            <button onclick="handleLogin()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase mt-2">Login</button>
+            <p class="text-center text-xs text-gray-500 mt-4">Belum punya akun? <a href="#" onclick="toggleForm('reg')" class="text-yellow-500 font-bold">Daftar</a></p>
         </div>
-        <div id="register-form" class="hidden">
-            <input type="text" id="reg-nama" placeholder="Nama Lengkap" class="input-field">
-            <input type="email" id="reg-email" placeholder="Email" class="input-field">
-            <input type="password" id="reg-pass" placeholder="Password" class="input-field">
-            <button onclick="handleRegister()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase mt-4">Daftar</button>
-            <p class="text-center text-xs text-gray-500 mt-4">Sudah punya akun? <a href="#" onclick="toggleForm('login')" class="text-yellow-500 font-bold">Masuk</a></p>
+
+        <div id="reg-form" class="hidden">
+            <input type="text" id="reg-nama" placeholder="Nama Lengkap" class="input-f">
+            <input type="email" id="reg-email" placeholder="Email" class="input-f">
+            <input type="password" id="reg-pass" placeholder="Password" class="input-f">
+            <button onclick="handleRegister()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase mt-2">Daftar</button>
+            <p class="text-center text-xs text-gray-500 mt-4">Sudah ada akun? <a href="#" onclick="toggleForm('log')" class="text-yellow-500 font-bold">Masuk</a></p>
         </div>
     </div>
+
     <script>
-        function toggleForm(t) {
-            document.getElementById('login-form').classList.toggle('hidden', t === 'register');
-            document.getElementById('register-form').classList.toggle('hidden', t === 'login');
+        function toggleForm(m) {
+            document.getElementById('login-form').classList.toggle('hidden', m === 'reg');
+            document.getElementById('reg-form').classList.toggle('hidden', m === 'log');
         }
     </script>
 </body>
