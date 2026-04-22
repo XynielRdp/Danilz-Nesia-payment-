@@ -3,108 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IRANVEST V12 | Realistic Edition</title>
+    <title>IRANVEST V12.1 | Daniel Refined</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
         :root { 
-            --ex-yellow: #ffec00; 
-            --bg-deep: radial-gradient(circle at top right, #1a1c20, #0a0b0d);
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
+            --ex-yellow: #ffec00; --bg-deep: #0a0b0d; --card-bg: rgba(255, 255, 255, 0.05);
         }
 
         body { 
-            background: var(--bg-deep); color: #e0e0e0; 
-            font-family: 'Inter', sans-serif; margin: 0; min-height: 100vh;
+            background: var(--bg-deep); color: #fff; font-family: 'Inter', sans-serif; 
+            margin: 0; overflow: hidden; height: 100vh;
         }
 
-        /* REALISTIC GLASSMORPHISM */
+        /* CONTAINER FIX */
+        #mainApp { display: none; height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #authScreen { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; align-items: center; justify-content: center; }
+
+        /* CARDS */
         .glass-card { 
-            background: var(--glass); backdrop-filter: blur(10px);
-            border: 1px solid var(--border); border-radius: 16px; padding: 20px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3); margin-bottom: 15px;
+            background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; padding: 20px; margin-bottom: 15px; backdrop-filter: blur(10px);
         }
 
-        /* LAYER FIX */
-        #authScreen { position: fixed; inset: 0; background: #0a0b0d; z-index: 10000; display: none; align-items: center; justify-content: center; }
-        #mainApp { display: none; padding-top: 20px; }
-
-        .btn-main { 
-            background: var(--ex-yellow); color: #000; border: none; border-radius: 10px;
-            font-weight: 700; padding: 14px; width: 100%; transition: 0.3s;
-        }
-
-        /* MINING ORB REALISTIC */
+        /* MINING FIX */
         .mining-orb { 
-            width: 140px; height: 140px; border-radius: 50%; margin: 20px auto;
-            background: radial-gradient(circle, rgba(255,236,0,0.15) 0%, transparent 70%);
-            border: 1px solid var(--ex-yellow); display: flex; align-items: center; 
-            justify-content: center; cursor: pointer; box-shadow: 0 0 20px rgba(255,236,0,0.1);
+            width: 130px; height: 130px; border-radius: 50%; margin: 15px auto;
+            border: 2px solid var(--ex-yellow); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; transition: transform 0.1s;
+            background: radial-gradient(circle, rgba(255,236,0,0.1), transparent);
         }
+        .mining-orb:active { transform: scale(0.9); }
+        .orb-text { font-size: 20px; font-weight: 800; color: var(--ex-yellow); }
 
-        /* SUPPORT SYSTEM PANEL */
+        /* CHAT UI PERFECTED */
         #supportPanel { 
-            position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10001; 
+            position: fixed; inset: 0; background: #0a0b0d; z-index: 10001; 
             display: none; flex-direction: column; 
         }
-        .chat-area { flex: 1; overflow-y: auto; padding: 20px; }
-        .msg-box { padding: 10px 15px; border-radius: 12px; margin-bottom: 10px; max-width: 80%; font-size: 14px; }
-        .msg-admin { background: #25272b; align-self: flex-start; }
-        .msg-user { background: var(--ex-yellow); color: #000; align-self: flex-end; margin-left: auto; }
+        .chat-header { padding: 15px; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 15px; background: #111; }
+        .chat-flow { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #080808; }
+        .msg { max-width: 80%; padding: 10px 14px; border-radius: 15px; font-size: 14px; line-height: 1.4; }
+        .msg-admin { background: #222; color: #eee; align-self: flex-start; border-bottom-left-radius: 2px; }
+        .msg-user { background: var(--ex-yellow); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; font-weight: 500; }
+        .chat-input-area { padding: 10px 15px; background: #111; display: flex; gap: 10px; align-items: center; }
 
+        /* NAVIGATION */
         .nav-bar { 
-            position: fixed; bottom: 0; width: 100%; background: rgba(10,11,13,0.95);
-            display: flex; justify-content: space-around; padding: 15px 0;
-            border-top: 1px solid var(--border); z-index: 999;
+            position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9);
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid #222; z-index: 999;
         }
-        .nav-item { color: #666; text-align: center; font-size: 10px; cursor: pointer; text-decoration: none; }
+        .nav-item { color: #555; text-align: center; font-size: 10px; cursor: pointer; text-decoration: none; }
         .nav-item.active { color: var(--ex-yellow); }
 
-        section { display: none; padding: 15px 15px 100px; animation: fadeIn 0.4s ease; }
+        section { display: none; padding: 20px 15px 100px; animation: fadeIn 0.3s ease; }
         .active-sec { display: block !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<iframe src="https://www.youtube.com/embed/S_8nB_HhOts?autoplay=1&loop=1" allow="autoplay" style="display:none"></iframe>
+<audio id="djAudio" loop><source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_Day_Trip.mp3" type="audio/mpeg"></audio>
 
 <div id="authScreen">
     <div class="w-100 px-4" style="max-width: 400px;">
-        <div class="text-center mb-5">
-            <h1 style="color:var(--ex-yellow); font-weight: 800; letter-spacing: -1px;">IRANVEST</h1>
-            <p class="text-secondary small">Realistic Multi-Asset Terminal</p>
-        </div>
+        <h1 class="text-center mb-5 fw-bold" style="color:var(--ex-yellow);">IRANVEST</h1>
         <div id="loginArea">
-            <input type="text" id="uL" class="form-control bg-dark text-white border-0 mb-3 py-3 shadow-none" placeholder="Account ID" style="border-radius:12px;">
-            <input type="password" id="pL" class="form-control bg-dark text-white border-0 mb-4 py-3 shadow-none" placeholder="Password" style="border-radius:12px;">
-            <button class="btn-main shadow" onclick="auth('login')">LOGIN</button>
-            <p class="text-center mt-4 small text-secondary">New user? <span class="text-warning" onclick="toggleF(true)">Create Node</span></p>
+            <input type="text" id="uL" class="form-control bg-dark text-white border-0 mb-3 py-3" placeholder="Account ID">
+            <input type="password" id="pL" class="form-control bg-dark text-white border-0 mb-4 py-3" placeholder="Password">
+            <button class="btn btn-warning w-100 py-3 fw-bold" onclick="auth('login')">SIGN IN</button>
+            <p class="text-center mt-4 small text-secondary" onclick="toggleF(true)">Register New Client</p>
         </div>
         <div id="regArea" style="display:none">
-            <input type="text" id="uR" class="form-control bg-dark text-white border-0 mb-3 py-3" placeholder="New Account ID" style="border-radius:12px;">
-            <input type="password" id="pR" class="form-control bg-dark text-white border-0 mb-4 py-3" placeholder="Create Password" style="border-radius:12px;">
-            <button class="btn-main shadow" onclick="auth('reg')">INITIALIZE</button>
-            <p class="text-center mt-4 small text-secondary" onclick="toggleF(false)">Already have an account? Login</p>
+            <input type="text" id="uR" class="form-control bg-dark text-white border-0 mb-3 py-3" placeholder="New Account ID">
+            <input type="password" id="pR" class="form-control bg-dark text-white border-0 mb-4 py-3" placeholder="Create Password">
+            <button class="btn btn-warning w-100 py-3 fw-bold" onclick="auth('reg')">INITIALIZE NODE</button>
+            <p class="text-center mt-4 small text-secondary" onclick="toggleF(false)">Back to Login</p>
         </div>
     </div>
 </div>
 
 <div id="mainApp">
     <div id="supportPanel">
-        <div class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark">
-            <h6 class="m-0"><i class="fas fa-headset me-2 text-warning"></i>DANIEL SUPPORT</h6>
-            <i class="fas fa-times fa-lg" onclick="toggleSupport()"></i>
+        <div class="chat-header">
+            <i class="fas fa-arrow-left" onclick="toggleSupport()"></i>
+            <div>
+                <div class="fw-bold">Daniel Support</div>
+                <div class="text-success small" style="font-size: 10px;"><i class="fas fa-circle"></i> Online</div>
+            </div>
         </div>
-        <div class="chat-area d-flex flex-column" id="chatFlow"></div>
-        <div class="p-3 bg-dark d-flex gap-2">
-            <input type="text" id="chatIn" class="form-control bg-secondary text-white border-0" placeholder="Type a message...">
+        <div class="chat-flow" id="chatFlow"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chatIn" class="form-control bg-dark text-white border-0" placeholder="Type a message...">
             <button class="btn btn-warning" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -112,61 +108,46 @@
     <section id="sec-home" class="active-sec">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="fw-bold m-0">Portfolio</h5>
-            <div class="dropdown">
-                <i class="fas fa-ellipsis-h fa-lg text-secondary" data-bs-toggle="dropdown"></i>
-                <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary">
-                    <li><a class="dropdown-item text-white" onclick="showHistory()"><i class="fas fa-history me-2"></i>History</a></li>
-                    <li><a class="dropdown-item text-white" onclick="toggleSupport()"><i class="fas fa-comment-dots me-2"></i>Support</a></li>
-                    <li><hr class="dropdown-divider border-secondary"></li>
-                    <li><a class="dropdown-item text-danger" onclick="logout()"><i class="fas fa-power-off me-2"></i>Exit</a></li>
-                </ul>
-            </div>
+            <i class="fas fa-headset text-warning fa-lg" onclick="toggleSupport()"></i>
         </div>
         <div class="glass-card text-center py-4">
-            <small class="text-secondary">Equity Value</small>
-            <h1 class="fw-bold text-white mb-0" id="balTxt">Rp 0</h1>
+            <small class="text-secondary">Equity Balance</small>
+            <h1 class="fw-bold" id="balTxt">Rp 0</h1>
         </div>
-        <div id="chart" class="glass-card p-0" style="height:180px; overflow:hidden;"></div>
-        <h6 class="mb-3 fw-bold">Instruments</h6>
+        <div id="chart" class="glass-card p-0" style="height:180px;"></div>
+        <h6 class="mb-3">Live Instruments</h6>
         <div id="stocks" class="row g-2"></div>
     </section>
 
     <section id="sec-mine">
-        <h5 class="fw-bold mb-4">Mining Center</h5>
+        <h5 class="fw-bold mb-4">Mining Station</h5>
         <div id="mineList"></div>
     </section>
 
     <section id="sec-wallet">
         <h5 class="fw-bold mb-4">Financials</h5>
-        <div class="glass-card" onclick="showForm('depo')">
-            <div class="d-flex justify-content-between align-items-center">
-                <span><i class="fas fa-plus-circle text-success me-3"></i>Deposit Funds</span>
-                <i class="fas fa-chevron-right text-secondary"></i>
-            </div>
+        <div class="glass-card d-flex justify-content-between" onclick="showForm('depo')">
+            <span><i class="fas fa-plus-circle text-success me-2"></i> Deposit</span>
+            <i class="fas fa-chevron-right text-secondary"></i>
         </div>
-        <div class="glass-card" onclick="showForm('wd')">
-            <div class="d-flex justify-content-between align-items-center">
-                <span><i class="fas fa-minus-circle text-danger me-3"></i>Withdraw Funds</span>
-                <i class="fas fa-chevron-right text-secondary"></i>
-            </div>
+        <div class="glass-card d-flex justify-content-between" onclick="showForm('wd')">
+            <span><i class="fas fa-minus-circle text-danger me-2"></i> Withdraw</span>
+            <i class="fas fa-chevron-right text-secondary"></i>
         </div>
-
         <div id="formArea" class="glass-card mt-3" style="display:none">
             <h6 id="formTitle" class="fw-bold text-warning mb-3"></h6>
-            <div id="depoInfo" class="mb-3 small text-secondary" style="display:none">Kirim ke DANA: 085714438874<br>Konfirmasi via Support Chat.</div>
-            <input type="number" id="fAmt" class="form-control bg-dark text-white border-0 mb-3" placeholder="Amount Rp">
-            <button class="btn-main" id="formBtn"></button>
+            <input type="number" id="fAmt" class="form-control bg-dark text-white border-0 mb-3" placeholder="Nominal Rp">
+            <button class="btn btn-warning w-100 fw-bold" id="formBtn"></button>
         </div>
     </section>
 
     <div class="nav-bar">
-        <div class="nav-item active" onclick="nav('sec-home', this)"><i class="fas fa-th-large fa-lg mb-1"></i><br>Market</div>
-        <div class="nav-item" onclick="nav('sec-mine', this)"><i class="fas fa-microchip fa-lg mb-1"></i><br>Mine</div>
-        <div class="nav-item" onclick="nav('sec-wallet', this)"><i class="fas fa-wallet fa-lg mb-1"></i><br>Wallet</div>
+        <div class="nav-item active" onclick="nav('sec-home', this)"><i class="fas fa-chart-line fa-lg"></i><br>Trade</div>
+        <div class="nav-item" onclick="nav('sec-mine', this)"><i class="fas fa-microchip fa-lg"></i><br>Mine</div>
+        <div class="nav-item" onclick="nav('sec-wallet', this)"><i class="fas fa-wallet fa-lg"></i><br>Wallet</div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
@@ -195,27 +176,66 @@
         db.ref('users/'+user+'/saldo').on('value', s => document.getElementById('balTxt').innerText = "Rp " + (s.val() || 0).toLocaleString());
         
         let h = "";
-        for(let i=1; i<=60; i++) h += `<div class="col-6"><div class="glass-card p-3 text-center" onclick="buy(${i})"><small class="text-secondary d-block">NODE_${i}</small><div class="fw-bold">Rp${(10000*i).toLocaleString()}</div></div></div>`;
+        for(let i=1; i<=60; i++) h += `<div class="col-6"><div class="glass-card p-3 text-center" onclick="buy(${i})"><small class="text-secondary d-block">EX_${i}</small><div class="fw-bold">Rp${(10000*i).toLocaleString()}</div></div></div>`;
         document.getElementById('stocks').innerHTML = h;
         
         initChart(); syncMine(); loadSupport();
+        document.body.addEventListener('click', () => document.getElementById('djAudio').play(), {once:true});
     }
 
-    // --- SUPPORT SYSTEM REAL ---
+    // --- MINING MISSION FIX ---
+    function syncMine() {
+        db.ref('users/'+user+'/contracts').on('value', s => {
+            const l = document.getElementById('mineList');
+            l.innerHTML = s.exists() ? "" : "<p class='text-center py-5'>Beli node untuk mulai mining.</p>";
+            s.forEach(c => {
+                const d = c.val();
+                l.innerHTML += `
+                    <div class="glass-card text-center">
+                        <h6 class="fw-bold">${d.name}</h6>
+                        <div class="mining-orb" onclick="tap('${c.key}')">
+                            <div class="orb-text">${d.clicks}/50</div>
+                        </div>
+                        <div class="progress bg-dark mb-2" style="height:6px">
+                            <div class="progress-bar bg-warning" style="width:${(d.clicks/50)*100}%"></div>
+                        </div>
+                        <small class="text-secondary">Mission: ${d.done}/3</small>
+                    </div>`;
+            });
+        });
+    }
+
+    function tap(id) {
+        const ref = db.ref('users/'+user+'/contracts/'+id);
+        ref.once('value', s => {
+            let d = s.val(); 
+            if(d.done >= 3) return alert("Daily Limit!");
+            let next = (d.clicks || 0) + 1;
+            if(next >= 50) {
+                ref.update({ clicks: 0, done: d.done + 1 }).then(() => {
+                    if(d.done + 1 === 3) db.ref('users/'+user+'/saldo').transaction(v => (v || 0) + d.daily);
+                });
+            } else {
+                ref.update({ clicks: next });
+            }
+        });
+    }
+
+    // --- SUPPORT UI REFINED ---
     function toggleSupport() {
         const p = document.getElementById('supportPanel');
-        p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+        p.style.display = (p.style.display === 'flex') ? 'none' : 'flex';
     }
 
     function loadSupport() {
         db.ref('messages/'+user).on('value', s => {
-            const f = document.getElementById('chatFlow');
-            f.innerHTML = "<div class='msg-box msg-admin'>Welcome to IRANVEST Support. How can we help?</div>";
+            const flow = document.getElementById('chatFlow');
+            flow.innerHTML = '<div class="msg msg-admin">Halo! Ada yang bisa kami bantu mengenai deposit atau withdraw?</div>';
             s.forEach(m => {
                 const d = m.val();
-                f.innerHTML += `<div class="msg-box ${d.sender==='admin'?'msg-admin':'msg-user'}">${d.text}</div>`;
+                flow.innerHTML += `<div class="msg ${d.sender==='admin'?'msg-admin':'msg-user'}">${d.text}</div>`;
             });
-            f.scrollTop = f.scrollHeight;
+            flow.scrollTop = flow.scrollHeight;
         });
     }
 
@@ -226,80 +246,52 @@
         i.value = "";
     }
 
-    // --- FINANCIALS FIX ---
+    // --- SYSTEM LOGIC ---
     function showForm(t) {
-        const a = document.getElementById('formArea');
-        a.style.display = 'block';
-        document.getElementById('formTitle').innerText = t === 'depo' ? "DEPOSIT FUNDS" : "WITHDRAW FUNDS";
-        document.getElementById('depoInfo').style.display = t === 'depo' ? 'block' : 'none';
-        document.getElementById('formBtn').innerText = t === 'depo' ? "I HAVE TRANSFERRED" : "SUBMIT REQUEST";
-        document.getElementById('formBtn').onclick = () => t === 'depo' ? confirmDepo() : processWD();
-    }
-
-    function confirmDepo() {
-        const amt = document.getElementById('fAmt').value;
-        if(!amt) return alert("Enter amount!");
-        db.ref('messages/'+user).push({ sender: 'user', text: `[DEPOSIT NOTIFICATION] User has sent Rp${amt}. Please check.`, time: Date.now() });
-        alert("Notification sent to Admin. Your balance will update after verification.");
-        document.getElementById('formArea').style.display = 'none';
-    }
-
-    function processWD() {
-        const amt = parseInt(document.getElementById('fAmt').value);
-        db.ref('users/'+user+'/saldo').once('value', s => {
-            if(s.val() < amt) return alert("Insufficient balance!");
-            db.ref('users/'+user).update({ saldo: s.val() - amt });
-            db.ref('users/'+user+'/wd_history').push({ amount: amt, status: 'Pending', date: new Date().toLocaleString() });
-            alert("Withdrawal request submitted.");
+        document.getElementById('formArea').style.display = 'block';
+        document.getElementById('formTitle').innerText = t === 'depo' ? "Deposit Funds" : "Withdraw Funds";
+        document.getElementById('formBtn').innerText = t === 'depo' ? "Confirm Deposit" : "Request WD";
+        document.getElementById('formBtn').onclick = () => {
+            const amt = document.getElementById('fAmt').value;
+            if(!amt) return;
+            if(t === 'depo') {
+                db.ref('messages/'+user).push({ sender: 'user', text: `[SYSTEM] Deposit Request: Rp${amt}. DANA: 085714438874` });
+                alert("Request sent to support!");
+            } else {
+                db.ref('users/'+user+'/saldo').once('value', s => {
+                    if(s.val() < amt) return alert("Low balance!");
+                    db.ref('users/'+user).update({ saldo: s.val() - amt });
+                    db.ref('users/'+user+'/wd_history').push({ amount: amt, date: new Date().toLocaleString() });
+                    alert("WD Request sent!");
+                });
+            }
             document.getElementById('formArea').style.display = 'none';
-        });
-    }
-
-    // --- OTHER CORE ---
-    function syncMine() {
-        db.ref('users/'+user+'/contracts').on('value', s => {
-            const l = document.getElementById('mineList');
-            l.innerHTML = s.exists() ? "" : "<p class='text-center text-secondary py-5'>No nodes active.</p>";
-            s.forEach(c => {
-                const d = c.val();
-                l.innerHTML += `<div class="glass-card text-center"><h6>${d.name}</h6><div class="mining-orb" onclick="tap('${c.key}')"><div class="fw-bold text-warning">${d.clicks}/50</div></div><small>${d.done}/3 Missions Done</small></div>`;
-            });
-        });
-    }
-
-    function tap(id) {
-        db.ref('users/'+user+'/contracts/'+id).once('value', s => {
-            let d = s.val(); if(d.done >= 3) return;
-            if(d.clicks + 1 >= 50) {
-                db.ref('users/'+user+'/contracts/'+id).update({ clicks: 0, done: d.done + 1 });
-                if(d.done + 1 === 3) db.ref('users/'+user+'/saldo').transaction(v => v + d.daily);
-            } else db.ref('users/'+user+'/contracts/'+id).update({ clicks: d.clicks + 1 });
-        });
+        };
     }
 
     function buy(i) {
         const p = 10000*i;
         db.ref('users/'+user+'/saldo').once('value', s => {
-            if(s.val() >= p) {
+            if((s.val() || 0) >= p) {
                 db.ref('users/'+user).update({ saldo: s.val() - p });
                 db.ref('users/'+user+'/contracts/'+Date.now()).set({ name: 'NODE_'+i, daily: 2000+(i*100), clicks: 0, done: 0 });
-                alert("Node activated!");
-            } else alert("Balance not enough.");
+                alert("Active!");
+            } else alert("Balance low!");
         });
     }
 
     function auth(t) {
-        const u = document.getElementById(t==='login'?'uL':'uR').value;
-        const p = document.getElementById(t==='login'?'pL':'pR').value;
+        const u = document.getElementById(t==='login'?'uL':'uR').value.trim();
+        const p = document.getElementById(t==='login'?'pL':'pR').value.trim();
         if(t==='login') db.ref('users/'+u).once('value', s => {
             if(s.exists() && s.val().password === p) { localStorage.setItem("uSess", u); location.reload(); }
-            else alert("Error login!");
+            else alert("Fail!");
         });
         else db.ref('users/'+u).set({ password: p, saldo: 0 }).then(() => { localStorage.setItem("uSess", u); location.reload(); });
     }
 
     function initChart() {
-        const c = LightweightCharts.createChart(document.getElementById('chart'), { layout: { backgroundColor: 'transparent', textColor: '#555' }, grid: { vertLines: { color: '#1a1c20' }, horzLines: { color: '#1a1c20' } } });
+        const c = LightweightCharts.createChart(document.getElementById('chart'), { layout: { backgroundColor: 'transparent', textColor: '#444' }, grid: { vertLines: { color: '#111' }, horzLines: { color: '#111' } } });
         const l = c.addLineSeries({ color: '#ffec00', lineWidth: 2 });
         let v = 100; setInterval(() => { v += (Math.random()-0.48)*3; l.update({ time: Date.now()/1000, value: v }); }, 2000);
     }
