@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Dayincome Fx</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #0b0c10; 
+            color: #ffffff; 
+            font-family: 'Inter', sans-serif;
+            background-image: radial-gradient(circle at top right, #1f2937, #0b0c10);
+        }
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
+            color: #000;
+        }
+        .input-dark {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .input-dark:focus {
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-md w-full glass-card rounded-[2.5rem] p-8 shadow-2xl">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold tracking-tighter italic" style="color: #FFD700;">DAYINCOME FX</h1>
+            <p class="text-gray-500 text-xs mt-1 uppercase tracking-widest">Official Payment Gateway</p>
+        </div>
+
+        <div class="mb-6">
+            <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-2 tracking-wider">Nominal Deposit</label>
+            <div class="relative">
+                <span class="absolute left-4 top-3.5 text-gray-500 font-bold">IDR</span>
+                <input type="number" id="amount" placeholder="Min 1,000" oninput="hitungAdmin()"
+                    class="input-dark w-full rounded-2xl py-4 pl-14 pr-4 outline-none text-xl font-bold transition-all">
+            </div>
+        </div>
+
+        <div class="bg-black/40 rounded-2xl p-4 mb-6 text-sm space-y-2">
+            <div class="flex justify-between text-gray-400">
+                <span>Biaya Layanan (0.7%)</span>
+                <span id="admin-fee">Rp 0</span>
+            </div>
+            <div class="flex justify-between font-bold pt-2 border-t border-white/5">
+                <span style="color: #FFD700;">Total Tagihan</span>
+                <span id="total-pay" style="color: #FFD700;">Rp 0</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-8">
+            <button onclick="togglePay('qris')" class="p-4 border border-white/10 rounded-2xl hover:bg-white/5 transition-all focus:border-yellow-500">
+                <p class="text-xs font-bold">SCAN QRIS</p>
+                <span class="text-[9px] text-gray-500">Otomatis</span>
+            </button>
+            <button onclick="togglePay('manual')" class="p-4 border border-white/10 rounded-2xl hover:bg-white/5 transition-all focus:border-yellow-500">
+                <p class="text-xs font-bold">E-WALLET</p>
+                <span class="text-[9px] text-gray-500">085714438874</span>
+            </button>
+        </div>
+
+        <div id="qris-box" class="hidden animate-pulse bg-white p-4 rounded-3xl mb-6 flex flex-col items-center">
+            <p class="text-black text-[10px] font-black mb-3">DANILZ STORE - NMID: ID1026482706839</p>
+            <img src="https://qrispaymentdanilzstore.edgeone.app" alt="QRIS Danilz Store" class="w-full h-auto rounded-lg">
+            <p class="text-black text-[9px] mt-2 font-semibold">Silakan screenshot & scan melalui aplikasi bank/e-wallet</p>
+        </div>
+
+        <div id="manual-box" class="hidden bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-2xl mb-6 text-xs text-center">
+            <p class="mb-1 text-gray-300 font-semibold uppercase">Nomor Tujuan (Danil)</p>
+            <p class="text-lg font-bold text-white">085714438874</p>
+            <p class="text-yellow-500">DANA • OVO • GOPAY</p>
+        </div>
+
+        <button onclick="kirimKonfirmasi()" class="gold-gradient w-full py-4 rounded-2xl font-black uppercase text-sm tracking-widest shadow-[0_10px_20px_rgba(255,215,0,0.1)] hover:scale-[1.02] active:scale-95 transition-all">
+            Konfirmasi Pembayaran
+        </button>
+
+        <footer class="mt-6 text-center text-[9px] text-gray-600 uppercase tracking-tighter">
+            Verified by Bank Indonesia • Dayincome Fx System
+        </footer>
+    </div>
+
+    <script>
+        function hitungAdmin() {
+            let val = document.getElementById('amount').value;
+            if (val >= 1000) {
+                let admin = Math.ceil(val * 0.007) + 500; // Contoh: 0.7% + flat 500
+                let total = parseInt(val) + admin;
+                document.getElementById('admin-fee').innerText = "Rp " + admin.toLocaleString();
+                document.getElementById('total-pay').innerText = "Rp " + total.toLocaleString();
+            }
+        }
+
+        function togglePay(mode) {
+            document.getElementById('qris-box').classList.add('hidden');
+            document.getElementById('manual-box').classList.add('hidden');
+            if(mode === 'qris') document.getElementById('qris-box').classList.remove('hidden');
+            if(mode === 'manual') document.getElementById('manual-box').classList.remove('hidden');
+        }
+
+        function kirimKonfirmasi() {
+            let val = document.getElementById('amount').value;
+            if(val < 1000) {
+                alert("Minimal Deposit Rp 1.000");
+                return;
+            }
+            let total = document.getElementById('total-pay').innerText;
+            let waUrl = `https://wa.me/6285714438874?text=Halo%20Admin%20Danil,%20Saya%20sudah%20melakukan%20deposit%20Dayincome%20Fx%0ANominal:%20Rp${val}%0ATotal%20Bayar:%20${total}%0AMohon%20segera%20dikonfirmasi.`;
+            window.location.href = waUrl;
+        }
+    </script>
+</body>
+</html>
