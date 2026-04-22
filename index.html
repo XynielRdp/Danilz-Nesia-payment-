@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -7,83 +7,62 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #0b0c10; color: #ffffff; font-family: 'Inter', sans-serif; background-image: radial-gradient(circle at top right, #1f2937, #0b0c10); }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .gold-gradient { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; }
-        .input-dark { background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .input-dark:focus { border-color: #FFD700; box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+        body { background: #0b0c10; color: #fff; font-family: 'Inter', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
-    <div class="max-w-md w-full glass-card rounded-[2.5rem] p-8 shadow-2xl">
-        <div class="text-center mb-8">
-            <h1 class="text-2xl font-extrabold tracking-tighter italic leading-tight" style="color: #FFD700;">PAYMENT  DANILZ NESIA</h1>
-            <p class="text-gray-500 text-[10px] mt-2 uppercase tracking-widest">Official Payment Gateway</p>
+    <div class="max-w-md w-full glass rounded-[2rem] p-6 shadow-2xl">
+        <div class="text-center mb-6">
+            <h1 class="text-xl font-black italic tracking-tighter" style="color:#FFD700">PAYMENT METODE BY DANILZ NESIA</h1>
+            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Official Gateway</p>
         </div>
 
-        <div class="mb-6">
-            <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-2 tracking-wider">Nominal Deposit</label>
-            <div class="relative">
-                <span class="absolute left-4 top-3.5 text-gray-500 font-bold">IDR</span>
-                <input type="number" id="amount" placeholder="Min 1,000" oninput="hitungAdmin()" class="input-dark w-full rounded-2xl py-4 pl-14 pr-4 outline-none text-xl font-bold transition-all">
-            </div>
-            <p class="text-[9px] text-gray-500 mt-2 px-1 text-center font-semibold italic">* Minimal deposit Rp 1.000</p>
+        <div class="mb-4">
+            <label class="text-[10px] text-gray-400 uppercase font-bold ml-1">Nominal</label>
+            <input type="number" id="amt" placeholder="Min 1,000" oninput="upd()" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 outline-none focus:border-yellow-500 text-lg font-bold mt-1">
         </div>
 
-        <div class="bg-black/40 rounded-2xl p-4 mb-6 text-sm space-y-2 border border-white/5">
-            <div class="flex justify-between text-gray-400"><span>Biaya Admin (Flat)</span><span class="text-white font-semibold">Rp 100</span></div>
-            <div class="flex justify-between font-bold pt-2 border-t border-white/10"><span style="color: #FFD700;">Total Bayar</span><span id="total-pay" style="color: #FFD700;">Rp 0</span></div>
+        <div class="bg-white/5 rounded-xl p-4 mb-6 text-sm space-y-2">
+            <div class="flex justify-between text-gray-400"><span>Admin (Flat)</span><span>Rp 100</span></div>
+            <div class="flex justify-between font-bold text-yellow-500 pt-2 border-t border-white/10"><span>Total</span><span id="tot">Rp 0</span></div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-8 text-center">
-            <button onclick="togglePay('qris')" class="p-4 border border-white/10 rounded-2xl hover:bg-white/5 transition-all focus:border-yellow-500">
-                <p class="text-xs font-bold uppercase">Scan QRIS</p>
-                <span class="text-[9px] text-gray-500 italic">Otomatis</span>
-            </button>
-            <button onclick="togglePay('manual')" class="p-4 border border-white/10 rounded-2xl hover:bg-white/5 transition-all focus:border-yellow-500">
-                <p class="text-xs font-bold uppercase">Manual</p>
-                <span class="text-[9px] text-gray-500 italic">E-Wallet</span>
-            </button>
+        <div class="grid grid-cols-2 gap-2 mb-6">
+            <button onclick="sel('q')" class="p-3 border border-white/10 rounded-xl hover:bg-white/10 transition-all focus:bg-yellow-500/20 focus:border-yellow-500"><p class="text-xs font-bold">QRIS</p></button>
+            <button onclick="sel('m')" class="p-3 border border-white/10 rounded-xl hover:bg-white/10 transition-all focus:bg-yellow-500/20 focus:border-yellow-500"><p class="text-xs font-bold">MANUAL</p></button>
         </div>
 
-        <div id="qris-box" class="hidden bg-white p-4 rounded-3xl mb-6 flex flex-col items-center">
-            <p class="text-black text-[10px] font-black mb-3 uppercase tracking-tighter text-center">Danilz Store - NMID: ID1026482706839</p>
-            <img src="https://i.ibb.co.com/NgBfCbBM/1000795750.png" alt="QRIS" class="w-full h-auto rounded-lg">
-            <p class="text-black text-[9px] mt-2 font-bold italic">Screenshot & Scan Sekarang</p>
+        <div id="qris" class="hidden bg-white p-3 rounded-2xl mb-6 flex flex-col items-center">
+            <p class="text-black text-[9px] font-bold mb-2">DANILZ STORE - ID1026482706839</p>
+            <img src="https://i.ibb.co.com/NgBfCbBM/1000795750.png" class="w-full h-auto rounded-lg">
         </div>
 
-        <div id="manual-box" class="hidden bg-yellow-500/10 border border-yellow-500/20 p-5 rounded-2xl mb-6 text-center">
-            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-bold">Nomor Tujuan (Danil)</p>
-            <p class="text-xl font-black text-white tracking-widest">085714438874</p>
-            <p class="text-yellow-500 text-xs font-bold mt-1 uppercase">DANA • OVO • GOPAY</p>
+        <div id="man" class="hidden bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-xl mb-6 text-center">
+            <p class="text-[10px] text-gray-400 font-bold uppercase">Nomor Tujuan</p>
+            <p class="text-lg font-black text-white">085714438874</p>
         </div>
 
-        <button onclick="kirimKonfirmasi()" class="gold-gradient w-full py-4 rounded-2xl font-black uppercase text-sm tracking-widest shadow-[0_10px_20px_rgba(255,215,0,0.15)] hover:brightness-110 active:scale-95 transition-all">
-            Konfirmasi Pembayaran
-        </button>
-
-        <footer class="mt-6 text-center text-[9px] text-gray-600 uppercase tracking-widest">Verified Gateway • Danilz Nesia System</footer>
+        <button onclick="pay()" class="gold w-full py-4 rounded-xl font-black uppercase text-sm tracking-widest shadow-lg active:scale-95 transition-all">Konfirmasi Pembayaran</button>
     </div>
 
     <script>
-        function hitungAdmin() {
-            let val = document.getElementById('amount').value;
-            let totalPayEl = document.getElementById('total-pay');
-            if (val && parseInt(val) >= 1000) {
-                let total = parseInt(val) + 100;
-                totalPayEl.innerText = "Rp " + total.toLocaleString('id-ID');
-            } else { totalPayEl.innerText = "Rp 0"; }
+        function upd() {
+            let v = document.getElementById('amt').value;
+            let t = document.getElementById('tot');
+            if(v >= 1000) { t.innerText = "Rp " + (parseInt(v) + 100).toLocaleString('id-ID'); } 
+            else { t.innerText = "Rp 0"; }
         }
-        function togglePay(mode) {
-            document.getElementById('qris-box').classList.toggle('hidden', mode !== 'qris');
-            document.getElementById('manual-box').classList.toggle('hidden', mode !== 'manual');
+        function sel(m) {
+            document.getElementById('qris').classList.toggle('hidden', m !== 'q');
+            document.getElementById('man').classList.toggle('hidden', m !== 'm');
         }
-        function kirimKonfirmasi() {
-            let val = document.getElementById('amount').value;
-            if(!val || val < 1000) { alert("Minimal deposit Rp 1.000"); return; }
-            let total = document.getElementById('total-pay').innerText;
-            let pesan = `Halo Admin Danil,%0A%0ASaya ingin konfirmasi pembayaran.%0A%0A- Metode: PAYMENT METODE BY DANILZ NESIA%0A- Nominal: Rp ${parseInt(val).toLocaleString('id-ID')}%0A- Biaya Admin: Rp 100%0A- Total Bayar: ${total}%0A%0AMohon segera diproses.`;
-            window.location.href = `https://wa.me/6285692069556?text=${pesan}`;
+        function pay() {
+            let v = document.getElementById('amt').value;
+            let t = document.getElementById('tot').innerText;
+            if(v < 1000) { alert("Minimal Rp 1.000"); return; }
+            window.location.href = `https://wa.me/6285714438874?text=Halo Admin Danil, konfirmasi deposit: %0A- Nominal: Rp ${parseInt(v).toLocaleString('id-ID')}%0A- Admin: Rp 100%0A- Total: ${t}`;
         }
     </script>
 </body>
