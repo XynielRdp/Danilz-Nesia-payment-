@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko - DANILZ NESIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #05070a; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; }
+    </style>
+</head>
+<body class="p-4 pb-24">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-xl font-black italic text-[#FFD700]">DANILZ NESIA</h1>
+        <div class="glass p-2 px-4 rounded-2xl flex items-center gap-3">
+            <div class="text-right">
+                <p class="text-[9px] text-gray-400">Saldo Anda</p>
+                <p id="user-balance" class="text-sm font-bold text-yellow-500">Rp 0</p>
+            </div>
+            <div id="user-initial" class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center font-bold text-black">?</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="glass p-4 rounded-3xl border border-white/5">
+            <h4 class="font-bold text-sm">Mobile Legends</h4>
+            <p class="text-[10px] text-gray-400">Stok Ready</p>
+            <button class="btn-gold w-full py-2 rounded-xl mt-3 text-[10px] font-black uppercase">Beli</button>
+        </div>
+        <div class="glass p-4 rounded-3xl border border-white/5 text-center" onclick="window.location.href='index.html'">
+            <h4 class="font-bold text-sm">Top Up Saldo</h4>
+            <p class="text-[10px] text-yellow-500">Klik di sini</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyBY7FaSViddpNqnncQ8Vtfp4Jmt7pJ6a80",
+          authDomain: "danilz-nesia.firebaseapp.com",
+          projectId: "danilz-nesia",
+          storageBucket: "danilz-nesia.firebasestorage.app",
+          messagingSenderId: "796392081651",
+          appId: "1:796392081651:web:a36a4545ddf92d97910f86"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, async (u) => {
+            if (u) {
+                const s = await getDoc(doc(db, "users", u.uid));
+                if (s.exists()) {
+                    document.getElementById('user-balance').innerText = "Rp " + s.data().balance.toLocaleString('id-ID');
+                    document.getElementById('user-initial').innerText = s.data().nama.charAt(0).toUpperCase();
+                }
+            } else { window.location.href = "login.html"; }
+        });
+    </script>
+</body>
+</html>
