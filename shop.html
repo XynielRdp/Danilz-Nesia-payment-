@@ -5,33 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toko - DANILZ NESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         body { background: #05070a; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .gold-text { color: #FFD700; }
         .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; }
     </style>
 </head>
 <body class="p-4 pb-24">
+
     <div class="flex justify-between items-center mb-8">
-        <h1 class="text-xl font-black italic text-[#FFD700]">DANILZ NESIA</h1>
+        <div>
+            <h1 class="text-xl font-black gold-text italic">DANILZ NESIA</h1>
+            <p class="text-[10px] text-gray-500 tracking-[0.2em]">UNCHECK GAME STORE</p>
+        </div>
         <div class="glass p-2 px-4 rounded-2xl flex items-center gap-3">
             <div class="text-right">
-                <p class="text-[9px] text-gray-400">Saldo Anda</p>
+                <p class="text-[9px] text-gray-400 uppercase">Saldo Anda</p>
                 <p id="user-balance" class="text-sm font-bold text-yellow-500">Rp 0</p>
             </div>
-            <div id="user-initial" class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center font-bold text-black">?</div>
+            <div id="user-initial" class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center font-bold text-black text-sm">?</div>
         </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
         <div class="glass p-4 rounded-3xl border border-white/5">
             <h4 class="font-bold text-sm">Mobile Legends</h4>
-            <p class="text-[10px] text-gray-400">Stok Ready</p>
-            <button class="btn-gold w-full py-2 rounded-xl mt-3 text-[10px] font-black uppercase">Beli</button>
+            <p class="text-[10px] text-gray-500">Mulai Rp 5.000</p>
+            <button class="btn-gold w-full py-2 rounded-xl mt-3 text-[10px] font-black uppercase">Beli Sekarang</button>
         </div>
-        <div class="glass p-4 rounded-3xl border border-white/5 text-center" onclick="window.location.href='index.html'">
-            <h4 class="font-bold text-sm">Top Up Saldo</h4>
-            <p class="text-[10px] text-yellow-500">Klik di sini</p>
+        <div class="glass p-4 rounded-3xl border border-white/5 text-center cursor-pointer" onclick="window.location.href='index.html'">
+            <h4 class="font-bold text-sm">Isi Saldo</h4>
+            <p class="text-[10px] text-yellow-500 mt-2 font-bold uppercase">Top Up Di Sini</p>
         </div>
     </div>
 
@@ -40,27 +46,38 @@
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // Config Danil dari gambar Project Settings
         const firebaseConfig = {
           apiKey: "AIzaSyBY7FaSViddpNqnncQ8Vtfp4Jmt7pJ6a80",
           authDomain: "danilz-nesia.firebaseapp.com",
           projectId: "danilz-nesia",
           storageBucket: "danilz-nesia.firebasestorage.app",
           messagingSenderId: "796392081651",
-          appId: "1:796392081651:web:a36a4545ddf92d97910f86"
+          appId: "1:796392081651:web:a36a4545ddf92d97910f86",
+          measurementId: "G-PSMD9SWSE6"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        onAuthStateChanged(auth, async (u) => {
-            if (u) {
-                const s = await getDoc(doc(db, "users", u.uid));
-                if (s.exists()) {
-                    document.getElementById('user-balance').innerText = "Rp " + s.data().balance.toLocaleString('id-ID');
-                    document.getElementById('user-initial').innerText = s.data().nama.charAt(0).toUpperCase();
+        // Pantau Status Login Player
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Ambil data saldo dari Firestore berdasarkan UID user
+                const docRef = doc(db, "users", user.uid);
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    // Update tampilan saldo dan inisial nama
+                    document.getElementById('user-balance').innerText = "Rp " + data.balance.toLocaleString('id-ID');
+                    document.getElementById('user-initial').innerText = data.nama.charAt(0).toUpperCase();
                 }
-            } else { window.location.href = "login.html"; }
+            } else {
+                // Jika belum login, tendang balik ke halaman login
+                window.location.href = "login.html";
+            }
         });
     </script>
 </body>
