@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - Dayincome Fx</title>
+    <title>PAYMENT METODE BY DANILZ NESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -36,8 +36,8 @@
 
     <div class="max-w-md w-full glass-card rounded-[2.5rem] p-8 shadow-2xl">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-extrabold tracking-tighter italic" style="color: #FFD700;">DAYINCOME FX</h1>
-            <p class="text-gray-500 text-xs mt-1 uppercase tracking-widest">Official Payment Gateway</p>
+            <h1 class="text-2xl font-extrabold tracking-tighter italic leading-tight" style="color: #FFD700;">PAYMENT METODE BY DANILZ NESIA</h1>
+            <p class="text-gray-500 text-[10px] mt-2 uppercase tracking-widest">Official Payment Gateway</p>
         </div>
 
         <div class="mb-6">
@@ -47,13 +47,13 @@
                 <input type="number" id="amount" placeholder="Min 1,000" oninput="hitungAdmin()"
                     class="input-dark w-full rounded-2xl py-4 pl-14 pr-4 outline-none text-xl font-bold transition-all">
             </div>
-            <p class="text-[9px] text-gray-500 mt-2 px-1">* Minimal deposit Rp 1.000</p>
+            <p class="text-[9px] text-gray-500 mt-2 px-1 text-center font-semibold italic">* Minimal deposit Rp 1.000</p>
         </div>
 
         <div class="bg-black/40 rounded-2xl p-4 mb-6 text-sm space-y-2 border border-white/5">
             <div class="flex justify-between text-gray-400">
                 <span>Biaya Admin (Flat)</span>
-                <span id="admin-fee" class="text-white font-semibold">Rp 100</span>
+                <span class="text-white font-semibold">Rp 100</span>
             </div>
             <div class="flex justify-between font-bold pt-2 border-t border-white/10">
                 <span style="color: #FFD700;">Total Bayar</span>
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 mb-8">
+        <div class="grid grid-cols-2 gap-3 mb-8 text-center">
             <button onclick="togglePay('qris')" class="p-4 border border-white/10 rounded-2xl hover:bg-white/5 transition-all focus:border-yellow-500">
                 <p class="text-xs font-bold uppercase">Scan QRIS</p>
                 <span class="text-[9px] text-gray-500 italic">Otomatis</span>
@@ -73,59 +73,6 @@
         </div>
 
         <div id="qris-box" class="hidden bg-white p-4 rounded-3xl mb-6 flex flex-col items-center">
-            <p class="text-black text-[10px] font-black mb-3 text-center uppercase tracking-tighter">Danilz Store - NMID: ID1026482706839</p>
-            <img src="https://ibb.co.com/NgBfCbBM" alt="QRIS Danilz Store" class="w-full h-auto rounded-lg">
-            <p class="text-black text-[9px] mt-2 font-semibold">Screenshot & Scan melalui aplikasi favoritmu</p>
-        </div>
-
-        <div id="manual-box" class="hidden bg-yellow-500/10 border border-yellow-500/20 p-5 rounded-2xl mb-6 text-center">
-            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-2 font-bold text-center">Nomor Tujuan (Danil)</p>
-            <p class="text-xl font-black text-white tracking-widest">085714438874</p>
-            <p class="text-yellow-500 text-xs font-bold mt-1">DANA • OVO • GOPAY</p>
-        </div>
-
-        <button onclick="kirimKonfirmasi()" class="gold-gradient w-full py-4 rounded-2xl font-black uppercase text-sm tracking-widest shadow-[0_10px_20px_rgba(255,215,0,0.15)] hover:brightness-110 active:scale-95 transition-all">
-            Konfirmasi Pembayaran
-        </button>
-
-        <footer class="mt-6 text-center text-[9px] text-gray-600 uppercase tracking-widest">
-            Verified Gateway • Dayincome Fx System
-        </footer>
-    </div>
-
-    <script>
-        function hitungAdmin() {
-            let val = document.getElementById('amount').value;
-            let totalPayEl = document.getElementById('total-pay');
-
-            if (val && parseInt(val) >= 1000) {
-                let admin = 100; 
-                let total = parseInt(val) + admin;
-                totalPayEl.innerText = "Rp " + total.toLocaleString('id-ID');
-            } else {
-                totalPayEl.innerText = "Rp 0";
-            }
-        }
-
-        function togglePay(mode) {
-            const qris = document.getElementById('qris-box');
-            const manual = document.getElementById('manual-box');
-            qris.classList.add('hidden');
-            manual.classList.add('hidden');
-            if(mode === 'qris') qris.classList.remove('hidden');
-            else manual.classList.remove('hidden');
-        }
-
-        function kirimKonfirmasi() {
-            let val = document.getElementById('amount').value;
-            if(!val || val < 1000) {
-                alert("Minimal deposit Rp 1.000");
-                return;
-            }
-            let total = document.getElementById('total-pay').innerText;
-            let pesan = `Halo Admin Danil,%0A%0ASaya ingin konfirmasi deposit di Dayincome Fx.%0A%0A- Nominal: Rp ${parseInt(val).toLocaleString('id-ID')}%0A- Biaya Admin: Rp 100%0A- Total Bayar: ${total}%0A%0AMohon segera divalidasi ya Admin.`;
-            window.location.href = `https://wa.me/6285714438874?text=${pesan}`;
-        }
-    </script>
-</body>
-</html>
+            <p class="text-black text-[10px] font-black mb-3 uppercase tracking-tighter">Danilz Store - NMID: ID1026482706839</p>
+            <img src="https://i.ibb.co.com/NgBfCbBM/1000795750.png" alt="QRIS Danilz Store" class="w-full h-auto rounded-
+                
