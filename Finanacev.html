@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance - DANILZ NESIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { background: #05070a; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .input-f { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); width: 100%; border-radius: 1rem; padding: 1rem; outline: none; color: #FFD700; font-weight: 800; }
+        .tab-btn { padding: 10px; border-radius: 12px; font-weight: 800; font-size: 11px; cursor: pointer; transition: 0.3s; flex: 1; text-align: center; }
+        .active-tab { background: #FFD700; color: #000; }
+        .status-pending { color: #FFA500; background: rgba(255, 165, 0, 0.1); padding: 2px 8px; border-radius: 6px; }
+    </style>
+</head>
+<body class="p-6 pb-20">
+    <div class="flex items-center justify-between mb-8">
+        <button onclick="window.location.href='shop.html'" class="w-10 h-10 glass rounded-full flex items-center justify-center">←</button>
+        <h2 class="font-black text-sm tracking-widest uppercase">Finance Center</h2>
+        <div class="w-10"></div>
+    </div>
+
+    <div class="flex gap-2 mb-6 glass p-1 rounded-2xl">
+        <div id="t-dep" onclick="switchTab('dep')" class="tab-btn active-tab">DEPOSIT</div>
+        <div id="t-wd" onclick="switchTab('wd')" class="tab-btn text-gray-500">WITHDRAW</div>
+    </div>
+
+    <div id="box-dep" class="glass p-6 rounded-[2rem] border border-yellow-500/20 mb-8">
+        <h3 class="text-xs font-bold text-[#FFD700] mb-4 uppercase">💎 Isi Saldo</h3>
+        <input type="number" id="amt-dep" placeholder="Nominal (Min 10.000)" class="input-f mb-4 text-xl">
+        
+        <div class="space-y-2 mb-6">
+            <div class="flex justify-between text-[11px] bg-white/5 p-3 rounded-xl">
+                <span class="text-gray-400 font-bold">DANA/OVO/GOPAY</span>
+                <span class="text-white">085714438874</span>
+            </div>
+        </div>
+        <button onclick="prosesTransaksi('Deposit')" class="bg-[#FFD700] text-black w-full py-4 rounded-xl font-black uppercase text-xs">Konfirmasi Transfer</button>
+    </div>
+
+    <div id="box-wd" class="glass p-6 rounded-[2rem] border border-red-500/20 mb-8 hidden">
+        <h3 class="text-xs font-bold text-red-500 mb-4 uppercase">💸 Tarik Saldo</h3>
+        <input type="number" id="amt-wd" placeholder="Nominal WD" class="input-f mb-4 text-xl">
+        <input type="text" id="target-wd" placeholder="Nomor DANA/Tujuan" class="input-f mb-4 text-sm">
+        <button onclick="prosesTransaksi('Withdraw')" class="bg-red-600 text-white w-full py-4 rounded-xl font-black uppercase text-xs">Ajukan Penarikan</button>
+    </div>
+
+    <div class="glass p-6 rounded-[2rem]">
+        <h3 class="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-[0.2em]">Riwayat Transaksi</h3>
+        
+        <div id="empty-msg" class="text-center py-4">
+            <p class="text-gray-600 text-xs italic">Belum ada riwayat transaksi</p>
+        </div>
+
+        <div id="history-list" class="space-y-4">
+            </div>
+    </div>
+
+    <script>
+        function switchTab(type) {
+            document.getElementById('box-dep').classList.toggle('hidden', type === 'wd');
+            document.getElementById('box-wd').classList.toggle('hidden', type === 'dep');
+            document.getElementById('t-dep').classList.toggle('active-tab', type === 'dep');
+            document.getElementById('t-wd').classList.toggle('active-tab', type === 'wd');
+            document.getElementById('t-dep').classList.toggle('text-gray-500', type === 'wd');
+            document.getElementById('t-wd').classList.toggle('text-gray-500', type === 'dep');
+        }
+
+        function prosesTransaksi(jenis) {
+            const amt = jenis === 'Deposit' ? document.getElementById('amt-dep').value : document.getElementById('amt-wd').value;
+            
+            if (!amt || amt < 10000) {
+                alert("Masukkan nominal minimal Rp 10.000");
+                return;
+            }
+
+            // Sembunyikan pesan kosong
+            document.getElementById('empty-msg').classList.add('hidden');
+
+            // Tambahkan ke Dashboard (Simulasi)
+            const list = document.getElementById('history-list');
+            const now = new Date();
+            const timeStr = now.getHours() + ":" + now.getMinutes();
+
+            const item = document.createElement('div');
+            item.className = "flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/5";
+            item.innerHTML = `
+                <div>
+                    <p class="text-[10px] font-bold ${jenis === 'Deposit' ? 'text-yellow-500' : 'text-red-500'} uppercase">${jenis}</p>
+                    <p class="text-xs font-black">Rp ${parseInt(amt).toLocaleString('id-ID')}</p>
+                    <p class="text-[9px] text-gray-500">${timeStr} • Menunggu Admin</p>
+                </div>
+                <span class="status-pending text-[9px] font-black uppercase italic">Pending</span>
+            `;
+
+            list.prepend(item);
+            alert(jenis + " berhasil diajukan! Saldo akan bertambah otomatis setelah dikonfirmasi Admin Jalil.");
+            
+            // Reset input
+            document.getElementById('amt-dep').value = "";
+            document.getElementById('amt-wd').value = "";
+        }
+    </script>
+</body>
+</html>
