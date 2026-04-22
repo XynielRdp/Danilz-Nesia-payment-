@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IRANVEST TITAN V9 PRO | Daniel Tech</title>
+    <title>IRANVEST TITAN V9.1 PRO | Daniel Tech</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,25 +24,29 @@
             background-size: 30px 30px;
         }
 
-        /* Glassmorphism UI */
+        /* PERBAIKAN: Default display diset NONE agar tidak tumpang tindih saat loading */
+        #authPage { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
+            display: none; align-items: center; justify-content: center; 
+            background: #000; z-index: 99999; 
+        }
+        
+        #mainApp { display: none; }
+
         .glass { background: var(--card-bg); border: 1px solid var(--neon-blue); backdrop-filter: blur(15px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); border-radius: 12px; }
         .btn-cyber { background: linear-gradient(45deg, var(--neon-blue), #005f66); border: none; color: black; font-family: 'Orbitron'; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); transition: 0.3s; }
-        .btn-cyber:hover { transform: scale(1.05); box-shadow: 0 0 15px var(--neon-blue); }
-
-        /* Mining Animation */
+        
         .mining-node { width: 100px; height: 100px; border: 4px solid var(--neon-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; transition: 0.2s; position: relative; }
-        .mining-node:active { transform: scale(0.9); }
         .mining-node::after { content: ''; position: absolute; width: 120%; height: 120%; border: 2px dashed var(--neon-pink); border-radius: 50%; animation: spin 4s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Live Chat */
         #chatBox { position: fixed; bottom: 85px; right: 15px; width: 300px; height: 400px; display: none; flex-direction: column; z-index: 10000; border: 2px solid var(--neon-pink); }
         #chatMsg { flex: 1; overflow-y: auto; padding: 10px; background: #000; }
         .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; font-size: 13px; max-width: 80%; }
         .msg-admin { background: #1a1a1a; color: var(--neon-blue); border-left: 3px solid var(--neon-blue); }
         .msg-user { background: var(--neon-blue); color: black; align-self: flex-end; margin-left: auto; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--neon-blue); z-index: 9999; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--neon-blue); z-index: 9998; }
         .nav-item { color: #444; font-size: 10px; text-align: center; cursor: pointer; }
         .nav-item.active { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
 
@@ -52,16 +56,16 @@
 </head>
 <body>
 
-<iframe src="https://www.youtube.com/embed/n4X5p9r_v6Y?autoplay=1&loop=1&playlist=n4X5p9r_v6Y" allow="autoplay" style="display:none"></iframe>
+<audio id="bgMusic" loop>
+    <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_Day_Trip.mp3" type="audio/mpeg">
+</audio>
 
 <div id="chatBox" class="glass">
     <div class="p-2 border-bottom border-info d-flex justify-content-between align-items-center">
-        <span class="text-info fw-bold"><i class="fas fa-headset me-2"></i>DANIEL_SUPPORT</span>
-        <i class="fas fa-times cursor-pointer" onclick="toggleChat()"></i>
+        <span class="text-info fw-bold">DANIEL_SUPPORT</span>
+        <i class="fas fa-times" onclick="toggleChat()"></i>
     </div>
-    <div id="chatMsg" class="d-flex flex-column">
-        <div class="msg msg-admin">Halo Daniel! Upload bukti transfer kamu di sini untuk proses Deposit cepat.</div>
-    </div>
+    <div id="chatMsg" class="d-flex flex-column"></div>
     <div class="p-2 bg-dark d-flex gap-1">
         <label class="btn btn-dark btn-sm m-0"><i class="fas fa-image"></i><input type="file" hidden onchange="sendImg()"></label>
         <input type="text" id="chatInp" class="form-control form-control-sm bg-black text-white" placeholder="Pesan...">
@@ -69,25 +73,25 @@
     </div>
 </div>
 
-<div id="authPage" class="container vh-100 d-flex align-items-center justify-content-center">
+<div id="authPage">
     <div class="glass p-4 w-100" style="max-width:360px;">
         <h2 class="text-center text-info fw-bold mb-4">IRANVEST</h2>
         <div id="loginArea">
             <input type="text" id="uL" class="form-control mb-3 bg-dark text-white border-info" placeholder="ID_USER">
             <input type="password" id="pL" class="form-control mb-4 bg-dark text-white border-info" placeholder="PASSWORD">
             <button class="btn btn-cyber w-100 py-3" onclick="doLogin()">AUTHORIZE</button>
-            <p class="text-center mt-3 small">Baru? <span class="text-info pointer" onclick="toggleAuth(true)">Daftar Akun</span></p>
+            <p class="text-center mt-3 small">Baru? <span class="text-info pointer" onclick="toggleAuth(true)" style="cursor:pointer">Daftar Akun</span></p>
         </div>
         <div id="regArea" style="display:none;">
             <input type="text" id="uR" class="form-control mb-3 bg-dark text-white border-info" placeholder="NEW_ID">
             <input type="password" id="pR" class="form-control mb-4 bg-dark text-white border-info" placeholder="NEW_PASSWORD">
             <button class="btn btn-cyber w-100 py-3" onclick="doReg()">INITIALIZE</button>
-            <p class="text-center mt-3 small"><span class="text-info pointer" onclick="toggleAuth(false)">Kembali Login</span></p>
+            <p class="text-center mt-3 small"><span class="text-info pointer" onclick="toggleAuth(false)" style="cursor:pointer">Kembali Login</span></p>
         </div>
     </div>
 </div>
 
-<div id="mainApp" style="display:none;">
+<div id="mainApp">
     <section id="sec-home" class="active-sec">
         <div class="d-flex justify-content-between mb-3">
             <h5 class="text-info">MARKET_MINING</h5>
@@ -103,17 +107,10 @@
     </section>
 
     <section id="sec-wallet">
-        <h5 class="text-info mb-4">DEPOSIT_DEPT</h5>
-        <div class="glass p-3 mb-4">
-            <div class="row g-2 mb-3">
-                <div class="col-6" onclick="showPay('DANA')"><div class="p-3 border border-info text-center"><i class="fas fa-wallet"></i> DANA</div></div>
-                <div class="col-6" onclick="showPay('QRIS')"><div class="p-3 border border-warning text-center"><i class="fas fa-qrcode"></i> QRIS</div></div>
-            </div>
-            <div id="payDetail" style="display:none;">
-                <p id="payText" class="small text-info"></p>
-                <input type="number" id="dAm" class="form-control mb-2 bg-dark text-white" placeholder="Nominal">
-                <button class="btn btn-cyber w-100" onclick="submitDepo()">KIRIM BUKTI (CHAT)</button>
-            </div>
+        <h5 class="text-info mb-4">WALLET_DEPT</h5>
+        <div class="glass p-3 mb-4 text-center">
+            <p class="text-info small">Transfer DANA: 085714438874</p>
+            <button class="btn btn-cyber w-100 mb-2" onclick="toggleChat()">KONFIRMASI VIA CHAT</button>
         </div>
     </section>
 
@@ -122,10 +119,6 @@
         <div class="nav-item" onclick="nav('sec-mission', this)"><i class="fas fa-hammer fa-lg"></i><br>MINING</div>
         <div class="nav-item" onclick="nav('sec-wallet', this)"><i class="fas fa-wallet fa-lg"></i><br>WALLET</div>
         <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt fa-lg"></i><br>EXIT</div>
-    </div>
-
-    <div id="chatBtn" style="position:fixed; bottom: 85px; right:15px; z-index:9999">
-        <button class="btn btn-info rounded-circle p-3" onclick="toggleChat()"><i class="fas fa-comment-dots fa-lg"></i></button>
     </div>
 </div>
 
@@ -144,122 +137,71 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let session = localStorage.getItem("uSess");
 
-    // -- AUTH SYSTEM --
-    function toggleAuth(r) {
-        document.getElementById('loginArea').style.display = r?'none':'block';
-        document.getElementById('regArea').style.display = r?'block':'none';
+    // -- PERBAIKAN LOGIKA STARTUP --
+    window.onload = () => {
+        const session = localStorage.getItem("uSess");
+        if (session && session !== "undefined") {
+            db.ref('users/' + session).once('value', s => {
+                if(s.exists()) {
+                    launchMainApp(session);
+                } else {
+                    localStorage.clear();
+                    launchAuth();
+                }
+            });
+        } else {
+            launchAuth();
+        }
+    };
+
+    function launchAuth() {
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('authPage').style.display = 'flex';
     }
 
+    function launchMainApp(user) {
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        init(user);
+    }
+
+    // -- AUTH ACTIONS --
     function doLogin() {
         const u = document.getElementById('uL').value.trim();
         const p = document.getElementById('pL').value.trim();
+        if(!u || !p) return;
         db.ref('users/'+u).once('value', s => {
             if(s.exists() && s.val().password === p) {
                 localStorage.setItem("uSess", u);
                 location.reload();
-            } else alert("DATA TIDAK COCOK");
+            } else alert("INVALID ACCESS");
         });
     }
 
     function doReg() {
         const u = document.getElementById('uR').value.trim();
         const p = document.getElementById('pR').value.trim();
+        if(!u || !p) return;
         db.ref('users/'+u).set({password:p, saldo:0}).then(() => {
             localStorage.setItem("uSess", u);
             location.reload();
         });
     }
 
-    // -- MINING MISSION SYSTEM --
-    function renderMissions() {
-        db.ref('users/'+session+'/contracts').on('value', s => {
-            const list = document.getElementById('missionList');
-            if(!s.exists()) { list.innerHTML = "<p class='text-center'>Beli Stock untuk mulai Mining.</p>"; return; }
-            list.innerHTML = "";
-            s.forEach(c => {
-                const d = c.val();
-                list.innerHTML += `
-                    <div class="glass p-3 mb-3 text-center">
-                        <h6>${d.name}</h6>
-                        <div class="mining-node" onclick="mine('${c.key}')">
-                            <i class="fas fa-hammer fa-2x text-info"></i>
-                        </div>
-                        <p class="small">Klik Sampai Target: <b>${d.clicks || 0} / 50</b></p>
-                        <p class="small text-warning">Progress Hari Ini: ${d.missions_done || 0}/3</p>
-                    </div>
-                `;
-            });
-        });
+    function toggleAuth(r) {
+        document.getElementById('loginArea').style.display = r?'none':'block';
+        document.getElementById('regArea').style.display = r?'block':'none';
     }
 
-    function mine(cid) {
-        db.ref('users/'+session+'/contracts/'+cid).once('value', s => {
-            let d = s.val();
-            if(d.missions_done >= 3) return alert("Misi hari ini sudah limit!");
-            
-            let newClicks = (d.clicks || 0) + 1;
-            if(newClicks >= 50) {
-                db.ref('users/'+session+'/contracts/'+cid).update({
-                    clicks: 0,
-                    missions_done: (d.missions_done || 0) + 1
-                });
-                if(d.missions_done + 1 === 3) {
-                    db.ref('users/'+session+'/saldo').transaction(cur => (cur || 0) + d.daily);
-                    alert("MINING COMPLETE! Profit Ditambahkan.");
-                } else {
-                    alert("Misi Ke-" + (d.missions_done + 1) + " Selesai!");
-                }
-            } else {
-                db.ref('users/'+session+'/contracts/'+cid).update({clicks: newClicks});
-            }
-        });
-    }
-
-    // -- WALLET & CHAT --
-    function showPay(t) {
-        document.getElementById('payDetail').style.display = 'block';
-        document.getElementById('payText').innerText = t === 'DANA' ? "Kirim DANA: 085714438874" : "Hubungi Admin via Chat untuk QRIS";
-    }
-
-    function toggleChat() {
-        const c = document.getElementById('chatBox');
-        c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function sendChat() {
-        const i = document.getElementById('chatInp');
-        if(!i.value) return;
-        const m = document.getElementById('chatMsg');
-        m.innerHTML += `<div class="msg msg-user">${i.value}</div>`;
-        i.value = "";
-        setTimeout(() => {
-            m.innerHTML += `<div class="msg msg-admin">Sedang kami verifikasi, Daniel. Tunggu sebentar ya.</div>`;
-            m.scrollTop = m.scrollHeight;
-        }, 1500);
-    }
-
-    function sendImg() {
-        const m = document.getElementById('chatMsg');
-        m.innerHTML += `<div class="msg msg-user"><i class="fas fa-file-image"></i> Bukti Terkirim</div>`;
-        setTimeout(() => { m.innerHTML += `<div class="msg msg-admin">Bukti diterima. Saldo diproses.</div>`; }, 1000);
-    }
-
-    // -- DATA CORE --
-    window.onload = () => {
-        if(session) {
-            document.getElementById('authPage').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            sync(); initChart(); renderMissions();
-        }
-    };
-
-    function sync() {
+    // -- MAIN LOGIC --
+    function init(session) {
+        // Sync Saldo
         db.ref('users/'+session+'/saldo').on('value', s => {
             document.getElementById('bal').innerText = "Rp " + (s.val() || 0).toLocaleString();
         });
-        // Render 60 stocks (Simplified loop)
+        
+        // Stock List
         let sc = "";
         for(let i=1; i<=60; i++) {
             sc += `<div class="col-6"><div class="glass p-2 text-center" onclick="buy(${i})">
@@ -269,22 +211,50 @@
             </div></div>`;
         }
         document.getElementById('stocks').innerHTML = sc;
+
+        // Init Chart & Missions
+        initChart();
+        renderMissions(session);
+        
+        // Music Trigger
+        document.body.addEventListener('click', () => { document.getElementById('bgMusic').play(); }, {once:true});
     }
 
-    function buy(i) {
-        const price = 10000 * i;
-        const daily = 2000 + (i * 100);
-        if(confirm(`Beli NODE_V${i} seharga Rp${price.toLocaleString()}?`)) {
-            db.ref('users/'+session+'/saldo').once('value', s => {
-                if(s.val() >= price) {
-                    db.ref('users/'+session).update({saldo: s.val() - price});
-                    db.ref('users/'+session+'/contracts/C'+Date.now()).set({
-                        name: `NODE_V${i}`, daily: daily, missions_done: 0, clicks: 0
-                    });
-                    alert("STOCK BERHASIL DIBELI!");
-                } else alert("SALDO TIDAK CUKUP");
+    function renderMissions(session) {
+        db.ref('users/'+session+'/contracts').on('value', s => {
+            const list = document.getElementById('missionList');
+            if(!s.exists()) return list.innerHTML = "<p class='text-center'>Beli Stock untuk mulai Mining.</p>";
+            list.innerHTML = "";
+            s.forEach(c => {
+                const d = c.val();
+                list.innerHTML += `
+                    <div class="glass p-3 mb-3 text-center">
+                        <h6>${d.name}</h6>
+                        <div class="mining-node" onclick="mine('${c.key}')">
+                            <i class="fas fa-hammer fa-2x text-info"></i>
+                        </div>
+                        <p class="small">Clicks: ${d.clicks || 0}/50 | Hari ini: ${d.missions_done || 0}/3</p>
+                    </div>
+                `;
             });
-        }
+        });
+    }
+
+    function mine(cid) {
+        const session = localStorage.getItem("uSess");
+        db.ref('users/'+session+'/contracts/'+cid).once('value', s => {
+            let d = s.val();
+            if(d.missions_done >= 3) return alert("Limit!");
+            let next = (d.clicks || 0) + 1;
+            if(next >= 50) {
+                db.ref('users/'+session+'/contracts/'+cid).update({clicks:0, missions_done: (d.missions_done+1)});
+                if(d.missions_done + 1 === 3) {
+                    db.ref('users/'+session+'/saldo').transaction(v => v + d.daily);
+                }
+            } else {
+                db.ref('users/'+session+'/contracts/'+cid).update({clicks: next});
+            }
+        });
     }
 
     function initChart() {
@@ -302,6 +272,11 @@
         document.getElementById(id).classList.add('active-sec');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
+    }
+
+    function toggleChat() {
+        const c = document.getElementById('chatBox');
+        c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function logout() { localStorage.clear(); location.reload(); }
