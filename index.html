@@ -3,168 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MAHARAJA | JASTEB BIASA FIX</title>
+    <title>MAHARAJA | JASTEB OFFICIAL</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        :root { --primary: #0ea5e9; --secondary: #1e293b; --bg-dark: #0f172a; --admin-color: #f59e0b; }
+        body { background-color: var(--bg-dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; margin:0; padding-bottom: 50px; }
+        
+        .card-pro { background: var(--secondary); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .balance-card { background: linear-gradient(135deg, #0ea5e9, #6366f1); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
 
-        :root {
-            --primary: #0ea5e9;
-            --secondary: #1e293b;
-            --bg-dark: #0f172a;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh; padding-bottom: 120px;
-            overflow-x: hidden;
-        }
-
-        #authScreen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        #mainApp { display: none; }
-
-        .card-pro {
-            background: var(--secondary); border-radius: 20px;
-            padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .balance-card {
-            background: linear-gradient(135deg, #0ea5e9, #6366f1);
-            border-radius: 20px; padding: 20px; margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        .form-control-pro {
-            background: rgba(15, 23, 42, 0.8) !important;
-            border: 1px solid rgba(255,255,255,0.1) !important;
-            color: white !important; padding: 12px !important; border-radius: 12px !important;
-        }
+        .page { display: none !important; }
+        .page.active { display: block !important; animation: fadeIn 0.3s ease; }
+        #authScreen.active { display: flex !important; align-items: center; justify-content: center; min-height: 100vh; }
 
         .price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .price-item {
-            background: rgba(15, 23, 42, 0.5); border: 2px solid transparent;
-            border-radius: 15px; padding: 15px; cursor: pointer; text-align: center;
-            transition: 0.2s;
-        }
-        .price-item.active { border-color: var(--primary); background: rgba(14, 165, 233, 0.15); transform: scale(0.98); }
+        .price-item { background: rgba(15, 23, 42, 0.5); border: 2px solid transparent; border-radius: 15px; padding: 15px; cursor: pointer; text-align: center; }
+        .price-item.active { border-color: var(--primary); background: rgba(14, 165, 233, 0.15); }
 
-        /* TABLE HISTORY FIX */
-        .history-container { max-height: 250px; overflow-y: auto; }
-        .table-history { font-size: 11px; width: 100%; color: #e2e8f0; }
-        .table-history th { color: var(--primary); text-transform: uppercase; letter-spacing: 1px; padding: 10px 5px; border-bottom: 1px solid #334155; }
-        .table-history td { padding: 12px 5px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
-            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
-            border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000;
-        }
-
-        .btn-pay {
-            background: var(--primary); border: none; padding: 12px 25px;
-            border-radius: 12px; font-weight: 800; color: white;
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
-        }
-
-        .badge-status { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 700; }
+        .btn-pay { background: var(--primary); border: none; padding: 12px 25px; border-radius: 12px; font-weight: 800; color: white; width: 100%; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000; }
+        
+        .form-control-pro { background: rgba(15, 23, 42, 0.8) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; padding: 12px !important; border-radius: 10px !important; }
+        .admin-badge { background: var(--admin-color); color: black; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 5px; }
+        .badge-status { font-size: 10px; padding: 5px 10px; border-radius: 8px; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div id="authScreen">
-    <div class="card-pro w-100" style="max-width: 380px;">
-        <h3 class="fw-800 text-info text-center mb-2">MAHARAJA</h3>
-        <p class="text-center text-muted small mb-4">JASTEB BIASA PREMIUM</p>
-        
+<div id="authScreen" class="page active">
+    <div class="card-pro w-100" style="max-width: 400px; margin: 20px;">
+        <h3 class="fw-800 text-info text-center">MAHARAJA</h3>
         <div id="loginBox">
             <input type="text" id="uL" class="form-control-pro w-100 mb-2" placeholder="Username">
             <input type="password" id="pL" class="form-control-pro w-100 mb-3" placeholder="Password">
-            <button class="btn btn-primary w-100 p-3 fw-bold rounded-3" onclick="auth('login')">MASUK SEKARANG</button>
-            <p class="text-center mt-3 small">Belum ada akun? <a href="#" onclick="toggleAuth(true)" class="text-info text-decoration-none">Daftar</a></p>
+            <button class="btn btn-primary w-100 p-3 fw-bold" onclick="auth('login')">MASUK</button>
+            <p class="text-center mt-3 small">Belum punya akun? <a href="#" onclick="toggleAuth(true)" class="text-info">Daftar</a></p>
         </div>
-
         <div id="regBox" style="display:none">
-            <input type="text" id="uR" class="form-control-pro w-100 mb-2" placeholder="Pilih Username">
-            <input type="password" id="pR" class="form-control-pro w-100 mb-3" placeholder="Pilih Password">
-            <button class="btn btn-info w-100 p-3 fw-bold rounded-3 text-white" onclick="auth('reg')">DAFTAR AKUN</button>
-            <p class="text-center mt-3 small">Sudah punya akun? <a href="#" onclick="toggleAuth(false)" class="text-info text-decoration-none">Login</a></p>
+            <input type="text" id="uR" class="form-control-pro w-100 mb-2" placeholder="Username Baru">
+            <input type="password" id="pR" class="form-control-pro w-100 mb-3" placeholder="Password Baru">
+            <button class="btn btn-info w-100 p-3 fw-bold text-white" onclick="auth('reg')">DAFTAR</button>
+            <p class="text-center mt-3 small"><a href="#" onclick="toggleAuth(false)" class="text-info">Kembali Login</a></p>
         </div>
     </div>
 </div>
 
-<div id="mainApp">
-    <nav class="navbar navbar-dark px-3 py-2 border-bottom border-secondary mb-3 sticky-top bg-dark">
-        <span class="navbar-brand fw-800 text-info">MAHARAJA</span>
-        <button class="btn btn-link text-danger p-0" onclick="logout()"><i class="fas fa-sign-out-alt fa-lg"></i></button>
+<div id="homePage" class="page container px-3 py-3">
+    <nav class="d-flex justify-content-between align-items-center mb-4 mt-2">
+        <div><span class="fw-800 text-info h4 mb-0">MAHARAJA</span><div id="adminTag" style="display:none"><span class="admin-badge">MODE RAJA</span></div></div>
+        <div class="d-flex gap-2">
+            <button id="adminBtn" class="btn btn-warning btn-sm fw-bold" style="display:none" onclick="showPage('adminPage')">ADMIN</button>
+            <button class="btn btn-link text-danger p-0" onclick="logout()"><i class="fas fa-sign-out-alt fa-lg"></i></button>
+        </div>
     </nav>
 
-    <div class="container px-3">
-        <div class="balance-card">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <small class="opacity-75">Saldo Maharaja</small>
-                    <h2 class="fw-800 mb-0">Rp <span id="valBalance">0</span></h2>
-                </div>
-                <i class="fas fa-wallet fa-2x opacity-50"></i>
-            </div>
-            <button class="btn btn-sm btn-white bg-white text-dark mt-3 fw-bold rounded-pill px-3" onclick="alert('Topup ke Admin: 085714438874')">+ ISI SALDO</button>
-        </div>
+    <div class="balance-card">
+        <small class="opacity-75">Saldo Aktif</small>
+        <h2 class="fw-800">Rp <span id="valBalance">0</span></h2>
+        <button class="btn btn-sm btn-light mt-2 fw-bold rounded-pill px-4" onclick="showPage('topupPage')">ISI SALDO</button>
+    </div>
 
-        <div class="card-pro">
-            <h6 class="fw-bold mb-3 small"><i class="fas fa-envelope-open text-info me-2"></i>EMAIL TARGET</h6>
-            <input type="email" id="targetEmail" class="form-control-pro w-100" placeholder="user@example.com">
-        </div>
+    <div class="card-pro">
+        <h6 class="fw-bold mb-3 small">TARGET EMAIL</h6>
+        <input type="email" id="targetEmail" class="form-control-pro w-100" placeholder="customer@gmail.com">
+    </div>
 
-        <div class="card-pro">
-            <h6 class="fw-bold mb-3 small"><i class="fas fa-th-large text-info me-2"></i>PILIH NOMINAL</h6>
-            <div class="price-grid">
-                <div class="price-item" onclick="selectItem('Jasteb 1K', 1000, this)">
-                    <b class="d-block">1K</b><small class="text-info">Rp 1.000</small>
-                </div>
-                <div class="price-item" onclick="selectItem('Jasteb 5K', 5000, this)">
-                    <b class="d-block">5K</b><small class="text-info">Rp 5.000</small>
-                </div>
-                <div class="price-item" onclick="selectItem('Jasteb 10K', 10000, this)">
-                    <b class="d-block">10K</b><small class="text-info">Rp 10.000</small>
-                </div>
-                <div class="price-item" onclick="selectItem('Jasteb 25K', 25000, this)">
-                    <b class="d-block">25K</b><small class="text-info">Rp 25.000</small>
-                </div>
-                <div class="price-item" onclick="selectItem('Jasteb 50K', 50000, this)">
-                    <b class="d-block">50K</b><small class="text-info">Rp 50.000</small>
-                </div>
-                <div class="price-item" onclick="selectItem('Jasteb 100K', 100000, this)">
-                    <b class="d-block">100K</b><small class="text-info">Rp 100.000</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="card-pro">
-            <h6 class="fw-bold mb-3 small"><i class="fas fa-history text-info me-2"></i>RIWAYAT ANDA</h6>
-            <div class="history-container">
-                <table class="table-history">
-                    <thead>
-                        <tr><th>Produk</th><th>Email</th><th>Status</th></tr>
-                    </thead>
-                    <tbody id="historyBody">
-                        </tbody>
-                </table>
-            </div>
+    <div class="card-pro">
+        <h6 class="fw-bold mb-3 small text-uppercase">Layanan Jasteb</h6>
+        <div class="price-grid">
+            <div class="price-item" onclick="selectItem('Jasteb 1K', 1000, this)"><b>1K</b><br><small>Rp 1.000</small></div>
+            <div class="price-item" onclick="selectItem('Jasteb 5K', 5000, this)"><b>5K</b><br><small>Rp 5.000</small></div>
+            <div class="price-item" onclick="selectItem('Jasteb 10K', 10000, this)"><b>10K</b><br><small>Rp 10.000</small></div>
+            <div class="price-item" onclick="selectItem('Murid Jasteb', 15000, this)"><b>Murid</b><br><small>Rp 15.000</small></div>
         </div>
     </div>
 
+    <div class="card-pro">
+        <h6 class="fw-bold mb-3 small">RIWAYAT TRANSAKSI</h6>
+        <div id="historyList"></div>
+    </div>
+
     <div class="bottom-nav">
-        <div>
-            <small class="text-muted d-block" style="font-size: 9px;">Total Bayar</small>
-            <b id="totalTxt" class="text-info">Rp 0</b>
-        </div>
-        <button class="btn-pay" onclick="prosesBayar()">BAYAR SEKARANG</button>
+        <div><small class="text-muted d-block" style="font-size: 9px;">Total</small><b id="totalTxt" class="text-info">Rp 0</b></div>
+        <button class="btn-pay" style="max-width: 150px;" onclick="prosesOrder()">BELI</button>
+    </div>
+</div>
+
+<div id="adminPage" class="page container px-3 py-3">
+    <button class="btn btn-link text-white p-0 mb-3" onclick="showPage('homePage')"><i class="fas fa-arrow-left fa-lg"></i> Kembali</button>
+    
+    <div class="card-pro">
+        <h6 class="fw-bold mb-2 small text-warning">EDIT SALDO MANUAL</h6>
+        <input type="text" id="targetUser" class="form-control-pro w-100 mb-2" placeholder="Username Target">
+        <input type="number" id="newBalance" class="form-control-pro w-100 mb-2" placeholder="Nominal Saldo">
+        <button class="btn btn-warning w-100 fw-bold" onclick="updateUserBalance()">TERAPKAN</button>
+    </div>
+
+    <h6 class="fw-bold mt-4 mb-3 small text-info"><i class="fas fa-wallet me-2"></i>ANTRIAN DEPOSIT</h6>
+    <div id="adminDepositList"></div>
+
+    <h6 class="fw-bold mt-4 mb-3 small text-info"><i class="fas fa-shopping-cart me-2"></i>ANTRIAN PESANAN ITEM</h6>
+    <div id="adminOrderList"></div>
+</div>
+
+<div id="topupPage" class="page container px-3 py-3">
+    <button class="btn btn-link text-white p-0 mb-3" onclick="showPage('homePage')"><i class="fas fa-arrow-left fa-lg"></i> Kembali</button>
+    <div class="card-pro text-center">
+        <p class="text-info fw-800 h4 mb-0">085714438874</p>
+        <p class="small text-muted">DANA (A/N DANIEL)</p>
+    </div>
+    <div class="card-pro">
+        <input type="number" id="topupAmount" class="form-control-pro w-100 mb-3" placeholder="Nominal Deposit">
+        <button class="btn btn-primary w-100 p-3 fw-bold" onclick="reqTopup()">KONFIRMASI DEPOSIT</button>
     </div>
 </div>
 
@@ -172,7 +127,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // Konfigurasi Firebase Daniel
     const firebaseConfig = {
         apiKey: "AIzaSyCwrvbPBNwB0r7PSdFBqa4wS2gag-MmpDE",
         authDomain: "my-invest-database.firebaseapp.com",
@@ -186,100 +140,146 @@
     const db = firebase.database();
 
     let curUser = localStorage.getItem("mhrj_user");
-    let sPrice = 0; let sName = ""; let curBalance = 0;
+    let sPrice = 0, sName = "", curBalance = 0;
+    const ADMIN_USER = "admin_danil";
 
-    // Cek Login Saat Refresh
-    window.onload = () => { if(curUser) startApp(curUser); };
+    window.onload = () => { if(curUser) startApp(curUser); else showPage('authScreen'); };
 
-    function toggleAuth(reg) {
-        document.getElementById('loginBox').style.display = reg ? 'none' : 'block';
-        document.getElementById('regBox').style.display = reg ? 'block' : 'none';
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        if(id === 'adminPage') loadAdminData();
     }
 
     function auth(type) {
         const u = document.getElementById(type==='login'?'uL':'uR').value.trim().toLowerCase();
         const p = document.getElementById(type==='login'?'pL':'pR').value.trim();
-        if(!u || !p) return alert("Harap isi semua kolom!");
-
         if(type==='login') {
-            db.ref('users/'+u).once('value').then(s => {
-                if(s.exists() && s.val().pass === p) {
-                    localStorage.setItem("mhrj_user", u);
-                    startApp(u);
-                } else { alert("Username atau Password salah!"); }
+            db.ref('users/'+u).once('value', s => {
+                if(s.exists() && s.val().pass === p) { localStorage.setItem("mhrj_user", u); startApp(u); }
+                else alert("Login Gagal!");
             });
         } else {
-            db.ref('users/'+u).once('value').then(s => {
-                if(s.exists()) return alert("Username sudah terdaftar!");
-                db.ref('users/'+u).set({pass:p, balance: 0}).then(() => {
-                    alert("Daftar Berhasil! Silakan Login."); toggleAuth(false);
-                });
-            });
+            db.ref('users/'+u).set({pass:p, balance: 0}).then(() => { alert("Sukses Daftar!"); toggleAuth(false); });
         }
     }
 
     function startApp(u) {
-        curUser = u;
-        document.getElementById('authScreen').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
+        curUser = u; showPage('homePage');
+        if(u === ADMIN_USER) { document.getElementById('adminBtn').style.display='block'; document.getElementById('adminTag').style.display='block'; }
         
-        // Sync Saldo Realtime
         db.ref('users/'+u+'/balance').on('value', s => {
             curBalance = s.val() || 0;
             document.getElementById('valBalance').innerText = curBalance.toLocaleString('id-ID');
         });
 
-        // Sync History Khusus User Ini
         db.ref('orders').orderByChild('user').equalTo(u).on('value', s => {
-            const body = document.getElementById('historyBody');
-            body.innerHTML = "";
-            if(!s.exists()) {
-                body.innerHTML = "<tr><td colspan='3' class='text-center py-4 text-muted'>Belum ada transaksi</td></tr>";
-                return;
-            }
+            const h = document.getElementById('historyList'); h.innerHTML = "";
             s.forEach(d => {
                 const v = d.val();
-                let statusColor = v.status === 'Selesai' ? 'bg-success' : 'bg-warning text-dark';
-                body.innerHTML = `
-                <tr>
-                    <td><b>${v.item}</b></td>
-                    <td>${v.email}</td>
-                    <td><span class="badge-status ${statusColor}">${v.status}</span></td>
-                </tr>` + body.innerHTML;
+                let col = v.status === 'SUCCESS' ? 'bg-success' : (v.status === 'PENDING' ? 'bg-warning text-dark' : 'bg-danger');
+                h.innerHTML = `<div class="card-pro p-2 mb-2 d-flex justify-content-between align-items-center" style="background:rgba(255,255,255,0.03)">
+                    <span class="small">${v.item}<br><small class="opacity-50">${v.email || ''}</small></span>
+                    <span class="badge-status ${col}">${v.status || 'PENDING'}</span>
+                </div>` + h.innerHTML;
             });
         });
     }
 
     function selectItem(n, p, el) {
         document.querySelectorAll('.price-item').forEach(x => x.classList.remove('active'));
-        el.classList.add('active');
-        sPrice = p; sName = n;
+        el.classList.add('active'); sPrice = p; sName = n;
         document.getElementById('totalTxt').innerText = "Rp " + p.toLocaleString('id-ID');
     }
 
-    function prosesBayar() {
-        const mail = document.getElementById('targetEmail').value.trim();
-        if(!mail || !sPrice) return alert("Pilih layanan dan masukkan email target!");
-        if(curBalance < sPrice) return alert("Saldo Anda tidak cukup! Hubungi Admin.");
-
-        if(confirm(`Konfirmasi pembayaran ${sName} senilai Rp ${sPrice.toLocaleString('id-ID')}?`)) {
-            const newBal = curBalance - sPrice;
-            // Update Saldo & Tambah Order (Atomic Update)
-            db.ref('users/'+curUser).update({ balance: newBal }).then(() => {
-                db.ref('orders').push({
-                    user: curUser,
-                    email: mail,
-                    item: sName,
-                    harga: sPrice,
-                    status: "Proses",
-                    time: Date.now()
-                });
-                alert("Pembayaran Berhasil! Pesanan sedang diproses admin.");
-            }).catch(err => alert("Error: " + err));
+    function prosesOrder() {
+        const email = document.getElementById('targetEmail').value;
+        if(!email || !sPrice) return alert("Pilih layanan & email!");
+        if(curBalance < sPrice) return alert("Saldo Kurang!");
+        if(confirm("Beli " + sName + "?")) {
+            db.ref('users/'+curUser).update({ balance: curBalance - sPrice });
+            db.ref('orders').push({ user: curUser, email: email, item: sName, status: 'PENDING', time: Date.now() });
+            alert("Pesanan dikirim! Menunggu ACC Admin.");
         }
     }
 
-    function logout() { localStorage.removeItem("mhrj_user"); location.reload(); }
+    function reqTopup() {
+        const amt = parseInt(document.getElementById('topupAmount').value);
+        if(!amt || amt < 1000) return alert("Min 1K");
+        db.ref('topup_requests').push({ user: curUser, amount: amt, status: 'PENDING', time: Date.now() });
+        window.open(`https://wa.me/6285714438874?text=Topup%20User%20${curUser}%20Rp${amt}`);
+        showPage('homePage');
+    }
+
+    function loadAdminData() {
+        // Antrian Deposit
+        db.ref('topup_requests').on('value', s => {
+            const list = document.getElementById('adminDepositList'); list.innerHTML = "";
+            s.forEach(d => {
+                const v = d.val();
+                if(v.status === 'PENDING') {
+                    list.innerHTML += `<div class="card-pro mb-2 p-2" style="border-left: 4px solid orange">
+                        <div class="small fw-bold">${v.user} <span class="text-info">Rp ${v.amount.toLocaleString()}</span></div>
+                        <div class="mt-2 d-flex gap-2">
+                            <button class="btn btn-success btn-sm w-100" onclick="updateStatus('topup_requests', '${d.key}', 'SUCCESS', '${v.user}', ${v.amount})">ACC</button>
+                            <button class="btn btn-danger btn-sm w-100" onclick="updateStatus('topup_requests', '${d.key}', 'REJECTED')">TOLAK</button>
+                        </div>
+                    </div>`;
+                }
+            });
+        });
+
+        // Antrian Pesanan
+        db.ref('orders').on('value', s => {
+            const list = document.getElementById('adminOrderList'); list.innerHTML = "";
+            s.forEach(d => {
+                const v = d.val();
+                if(v.status === 'PENDING') {
+                    list.innerHTML += `<div class="card-pro mb-2 p-2" style="border-left: 4px solid cyan">
+                        <div class="small fw-bold">${v.user} - ${v.item}</div>
+                        <div class="small opacity-75">${v.email}</div>
+                        <div class="mt-2 d-flex gap-2">
+                            <button class="btn btn-info btn-sm w-100 fw-bold" onclick="updateStatus('orders', '${d.key}', 'SUCCESS')">ACC BELI</button>
+                            <button class="btn btn-danger btn-sm w-100 fw-bold" onclick="updateStatus('orders', '${d.key}', 'REJECTED', '${v.user}', 0, true, '${v.item}')">TOLAK</button>
+                        </div>
+                    </div>`;
+                }
+            });
+        });
+    }
+
+    function updateStatus(path, key, status, user, amount, isOrderReject = false, itemName = "") {
+        if(path === 'topup_requests' && status === 'SUCCESS') {
+            db.ref('users/'+user+'/balance').once('value', s => {
+                db.ref('users/'+user).update({ balance: (s.val()||0) + amount });
+            });
+        }
+        
+        // Jika admin menolak orderan, saldo harusnya balik ke user
+        if(isOrderReject) {
+            let refund = 0;
+            if(itemName.includes("1K")) refund = 1000;
+            else if(itemName.includes("5K")) refund = 5000;
+            else if(itemName.includes("10K")) refund = 10000;
+            else if(itemName.includes("Murid")) refund = 15000;
+            
+            db.ref('users/'+user+'/balance').once('value', s => {
+                db.ref('users/'+user).update({ balance: (s.val()||0) + refund });
+            });
+        }
+
+        db.ref(path + '/' + key).update({ status: status });
+        alert("Status Updated: " + status);
+    }
+
+    function updateUserBalance() {
+        const u = document.getElementById('targetUser').value.trim();
+        const b = parseInt(document.getElementById('newBalance').value);
+        db.ref('users/'+u).update({ balance: b }).then(() => alert("Saldo Updated!"));
+    }
+
+    function logout() { localStorage.clear(); location.reload(); }
+    function toggleAuth(r) { document.getElementById('loginBox').style.display = r?'none':'block'; document.getElementById('regBox').style.display = r?'block':'none'; }
 </script>
 </body>
-</html>
+        </html>
