@@ -3,99 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PAYMENT METODE BY DANILZ NESIA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>IRANVESTMENT GOLD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #0b0c10; color: #fff; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; }
+        :root { --bg: #0a0a0a; --card: #161616; --gold: #c49b3b; --gold-l: #f1d592; --white: #ffffff; }
+        body { background-color: var(--bg); color: var(--white); font-family: 'Poppins', sans-serif; margin: 0; }
+        #authSection { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-card { background: var(--card); border: 1px solid var(--gold); padding: 30px; border-radius: 20px; width: 100%; max-width: 400px; }
+        #mainDashboard { display: none; }
+        .dashboard { max-width: 600px; margin: 20px auto; background: linear-gradient(135deg, #161616 0%, #252525 100%); border: 1px solid var(--gold); border-radius: 20px; padding: 25px; }
+        .btn-main { background: linear-gradient(45deg, var(--gold), var(--gold-l)); color: black; font-weight: 700; border: none; width: 100%; padding: 12px; border-radius: 10px; transition: 0.3s; }
+        .btn-main:hover { transform: scale(1.02); opacity: 0.9; }
+        .form-control { background: #000; border: 1px solid #333; color: white; margin-bottom: 15px; }
+        .form-control:focus { background: #000; color: white; border-color: var(--gold); box-shadow: none; }
+        .live-chat { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 1000; text-decoration: none; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-    <div class="max-w-md w-full glass rounded-[2rem] p-6 shadow-2xl">
-        <div class="text-center mb-6">
-            <h1 class="text-xl font-black italic tracking-tighter" style="color:#FFD700">PAYMENT METODE BY DANILZ NESIA</h1>
-            <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Official Gateway</p>
-        </div>
+<body>
 
-        <div class="mb-4">
-            <label class="text-[10px] text-gray-400 uppercase font-bold ml-1">Nominal</label>
-            <input type="number" id="amt" placeholder="Min 1,000" oninput="upd()" class="w-full bg-black/40 border border-white/10 rounded-xl p-4 outline-none focus:border-yellow-500 text-lg font-bold mt-1">
+<div id="authSection">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-warning">IRANVEST GOLD</h3>
+            <p class="text-muted small" id="statusText">Silahkan Masuk/Daftar</p>
         </div>
-
-        <div class="bg-white/5 rounded-xl p-4 mb-6 text-sm space-y-2">
-            <div class="flex justify-between text-gray-400"><span>Admin (Flat)</span><span>Rp 100</span></div>
-            <div class="flex justify-between font-bold text-yellow-500 pt-2 border-t border-white/10"><span>Total</span><span id="tot">Rp 0</span></div>
+        
+        <div id="authForm">
+            <input type="text" id="username" class="form-control" placeholder="Username (Tanpa Spasi)">
+            <input type="password" id="password" class="form-control" placeholder="Password">
+            <button class="btn-main w-100 mb-2" onclick="handleLogin()">MASUK</button>
+            <button class="btn btn-outline-warning w-100" onclick="handleRegister()">DAFTAR AKUN BARU</button>
         </div>
-
-        <div class="grid grid-cols-2 gap-2 mb-6">
-            <button onclick="sel('q')" class="p-3 border border-white/10 rounded-xl hover:bg-white/10 transition-all focus:bg-yellow-500/20 focus:border-yellow-500"><p class="text-xs font-bold">QRIS</p></button>
-            <button onclick="sel('m')" class="p-3 border border-white/10 rounded-xl hover:bg-white/10 transition-all focus:bg-yellow-500/20 focus:border-yellow-500"><p class="text-xs font-bold">MANUAL</p></button>
-        </div>
-
-        <div id="qris" class="hidden bg-white p-3 rounded-2xl mb-6 flex flex-col items-center">
-            <p class="text-black text-[9px] font-bold mb-2">DANILZ STORE - ID1026482706839</p>
-            <img src="https://i.ibb.co.com/NgBfCbBM/1000795750.png" class="w-full h-auto rounded-lg">
-        </div>
-
-        <div id="man" class="hidden bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-xl mb-6 text-center">
-            <p class="text-[10px] text-gray-400 font-bold uppercase">Nomor Tujuan</p>
-            <p class="text-lg font-black text-white">085714438874</p>
-        </div>
-
-        <button onclick="pay()" class="gold w-full py-4 rounded-xl font-black uppercase text-sm tracking-widest shadow-lg active:scale-95 transition-all">Konfirmasi Pembayaran</button>
     </div>
-
-    <script>
-        function upd() {
-            let v = document.getElementById('amt').value;
-            let t = document.getElementById('tot');
-            if(v >= 1000) { t.innerText = "Rp " + (parseInt(v) + 100).toLocaleString('id-ID'); } 
-            else { t.innerText = "Rp 0"; }
-        }
-        function sel(m) {
-            document.getElementById('qris').classList.toggle('hidden', m !== 'q');
-            document.getElementById('man').classList.toggle('hidden', m !== 'm');
-        }
-        function pay() {
-            let v = document.getElementById('amt').value;
-            let t = document.getElementById('tot').innerText;
-            if(v < 1000) { alert("Minimal Rp 1.000"); return; }
-            window.location.href = `https://wa.me/6285714438874?text=Halo Admin Danil, konfirmasi deposit: %0A- Nominal: Rp ${parseInt(v).toLocaleString('id-ID')}%0A- Admin: Rp 100%0A- Total: ${t}`;
-        }
-    </script>
-</body>
-</html>
-<h4 class="text-sm font-bold mt-8 mb-4 uppercase text-gray-400">Join Komunitas</h4>
-<div class="space-y-3">
-    <a href="https://tiktok.com/@mlbbfredrin12" target="_blank" class="flex items-center justify-between bg-white/5 p-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-black rounded-full flex items-center justify-center border border-white/20">
-                <span class="text-[10px] font-black">TT</span>
-            </div>
-            <div>
-                <p class="text-xs font-bold">Follow TikTok</p>
-                <p class="text-[9px] text-gray-500">@mlbbfredrin12</p>
-            </div>
-        </div>
-        <span class="text-yellow-500 text-xs">→</span>
-    </a>
-
-    <a href="https://chat.whatsapp.com/KrW0QM3OnL64Mt2XqPv1eB" target="_blank" class="flex items-center justify-between bg-white/5 p-4 rounded-2xl border border-white/10 hover:bg-white/10 transition-all">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-green-600 rounded-full flex items-center justify-center">
-                <span class="text-[10px] font-black text-white">WA</span>
-            </div>
-            <div>
-                <p class="text-xs font-bold">Grup WhatsApp</p>
-                <p class="text-[9px] text-gray-500">Update Stok & Promo</p>
-            </div>
-        </div>
-        <span class="text-yellow-500 text-xs">→</span>
-    </a>
 </div>
 
-<style>
-    a:active { transform: scale(0.98); }
-</style>
+<div id="mainDashboard">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container d-flex justify-content-between">
+            <span class="navbar-brand fw-bold text-warning">IRANVEST</span>
+            <button class="btn btn-sm btn-danger" onclick="logout()">Keluar</button>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="dashboard">
+            <p class="text-secondary mb-0 small">Halo, <span id="uName">User</span></p>
+            <h2 id="uSaldo" style="color: var(--gold-l); font-weight: 700;">Rp 0</h2>
+            <hr class="border-secondary">
+            <div class="row text-center">
+                <div class="col-6 border-end border-secondary" onclick="alert('Hubungi Admin di WhatsApp untuk Deposit')">
+                    <i class="fas fa-plus-circle text-warning mb-1"></i><br><small>Isi Saldo</small>
+                </div>
+                <div class="col-6" onclick="alert('Minimal saldo tarik Rp 50.000')">
+                    <i class="fas fa-paper-plane text-warning mb-1"></i><br><small>Tarik Dana</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5">
+            <h5 class="fw-bold text-warning">PAKET INVESTASI</h5>
+            <div class="p-3 bg-dark border border-secondary rounded mb-3">
+                <h6>Bronze Pack</h6>
+                <p class="text-warning fw-bold mb-1">Rp 100.000</p>
+                <small>Profit 1.5% / Hari</small><br>
+                <button class="btn btn-sm btn-warning mt-2 w-100" onclick="window.open('https://wa.me/6285692069556')">BELI SEKARANG</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="https://wa.me/6285692069556" class="live-chat" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+    // Konfigurasi Database Daniel
+    const firebaseConfig = {
+        apiKey: "AIzaSyCwrvbPBNwB0r7PSdFBqa4wS2gag-MmpDE",
+        authDomain: "my-invest-database.firebaseapp.com",
+        databaseURL: "https://my-invest-database-default-rtdb.asia-southeast1.firebasedatabase.app/",
+        projectId: "my-invest-database",
+        storageBucket: "my-invest-database.firebasestorage.app",
+        messagingSenderId: "397898231978",
+        appId: "1:397898231978:web:ecf7ff6b9682f5e0b660d3"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Fungsi Registrasi
+    function handleRegister() {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+
+        if (user == "" || pass == "") return alert("Isi Username dan Password!");
+
+        db.ref('users/' + user).once('value').then((snapshot) => {
+            if (snapshot.exists()) {
+                alert("Username sudah ada, silahkan ganti yang lain.");
+            } else {
+                db.ref('users/' + user).set({
+                    username: user,
+                    password: pass,
+                    saldo: 0
+                }).then(() => {
+                    alert("Pendaftaran Berhasil! Sekarang klik tombol MASUK.");
+                });
+            }
+        }).catch(err => alert("Error: " + err.message));
+    }
+
+    // Fungsi Login
+    function handleLogin() {
+        const user = document.getElementById('username').value.trim();
+        const pass = document.getElementById('password').value.trim();
+
+        db.ref('users/' + user).once('value').then((snapshot) => {
+            const data = snapshot.val();
+            if (data && data.password === pass) {
+                localStorage.setItem("userLoggedIn", user);
+                checkSession();
+            } else {
+                alert("Username atau Password salah!");
+            }
+        });
+    }
+
+    // Cek Session Login
+    function checkSession() {
+        const session = localStorage.getItem("userLoggedIn");
+        if (session) {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('mainDashboard').style.display = 'block';
+            db.ref('users/' + session).on('value', (snapshot) => {
+                const data = snapshot.val();
+                document.getElementById('uName').innerText = data.username;
+                document.getElementById('uSaldo').innerText = "Rp " + parseInt(data.saldo).toLocaleString('id-ID');
+            });
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem("userLoggedIn");
+        location.reload();
+    }
+
+    window.onload = checkSession;
+</script>
+</body>
+</html>
