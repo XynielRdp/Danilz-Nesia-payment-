@@ -74,3 +74,27 @@
     </script>
 </body>
 </html>
+<script type="module">
+  // Import SDK Firebase dari CDN (Agar berfungsi di GitHub Pages)
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  // Konfigurasi Proyek Danilz Nesia kamu
+  const firebaseConfig = {
+    apiKey: "AIzaSyBY7FaSViddpNqnncQ8Vtfp4Jmt7pJ6a80",
+    authDomain: "danilz-nesia.firebaseapp.com",
+    projectId: "danilz-nesia",
+    storageBucket: "danilz-nesia.firebasestorage.app",
+    messagingSenderId: "796392081651",
+    appId: "1:796392081651:web:a36a4545ddf92d97910f86",
+    measurementId: "G-PSMD9SWSE6"
+  };
+
+  // Inisialisasi Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  console.log("Firebase Danilz Nesia Berhasil Terhubung!");
+</script>
