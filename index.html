@@ -3,122 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IRANVEST TITAN V9.1 PRO | Daniel Tech</title>
+    <title>IRANVEST V10 | Daniel Tech</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
 
-        :root { 
-            --neon-blue: #00f3ff; --neon-pink: #ff00ff; --neon-yellow: #ffcc00;
-            --dark-bg: #050505; --card-bg: rgba(10, 10, 10, 0.95);
-        }
+        :root { --n-blue: #00f3ff; --n-pink: #ff00ff; --dark: #000000; }
+        body { background: var(--dark); color: #fff; font-family: 'Rajdhani', sans-serif; margin: 0; overflow-x: hidden; }
 
-        body { 
-            background: var(--dark-bg); color: #e0e0e0; font-family: 'Rajdhani', sans-serif; 
-            margin: 0; padding: 0; overflow-x: hidden;
-            background-image: linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
+        /* FIX STUCK UI: Dipisah secara absolut */
+        #authLayer { position: fixed; inset: 0; background: #000; z-index: 9999; display: none; align-items: center; justify-content: center; }
+        #appLayer { display: none; padding-bottom: 100px; }
 
-        /* PERBAIKAN: Default display diset NONE agar tidak tumpang tindih saat loading */
-        #authPage { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; 
-            display: none; align-items: center; justify-content: center; 
-            background: #000; z-index: 99999; 
-        }
-        
-        #mainApp { display: none; }
+        .glass { background: rgba(15,15,15,0.95); border: 1px solid var(--n-blue); border-radius: 15px; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
+        .btn-cyber { background: var(--n-blue); color: #000; font-family: 'Orbitron'; font-weight: bold; border: none; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); width: 100%; padding: 12px; }
 
-        .glass { background: var(--card-bg); border: 1px solid var(--neon-blue); backdrop-filter: blur(15px); box-shadow: 0 0 20px rgba(0, 243, 255, 0.15); border-radius: 12px; }
-        .btn-cyber { background: linear-gradient(45deg, var(--neon-blue), #005f66); border: none; color: black; font-family: 'Orbitron'; font-weight: bold; clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%); transition: 0.3s; }
-        
-        .mining-node { width: 100px; height: 100px; border: 4px solid var(--neon-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 20px auto; cursor: pointer; transition: 0.2s; position: relative; }
-        .mining-node::after { content: ''; position: absolute; width: 120%; height: 120%; border: 2px dashed var(--neon-pink); border-radius: 50%; animation: spin 4s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* MINING BOX */
+        .mine-circle { width: 120px; height: 120px; border: 5px solid var(--n-blue); border-radius: 50%; margin: 15px auto; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s; position: relative; }
+        .mine-circle:active { transform: scale(0.9); }
+        .mine-circle::before { content: ''; position: absolute; inset: -10px; border: 2px dashed var(--n-pink); border-radius: 50%; animation: rotate 5s linear infinite; }
+        @keyframes rotate { 100% { transform: rotate(360deg); } }
 
-        #chatBox { position: fixed; bottom: 85px; right: 15px; width: 300px; height: 400px; display: none; flex-direction: column; z-index: 10000; border: 2px solid var(--neon-pink); }
-        #chatMsg { flex: 1; overflow-y: auto; padding: 10px; background: #000; }
-        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 8px; font-size: 13px; max-width: 80%; }
-        .msg-admin { background: #1a1a1a; color: var(--neon-blue); border-left: 3px solid var(--neon-blue); }
-        .msg-user { background: var(--neon-blue); color: black; align-self: flex-end; margin-left: auto; }
+        /* LIVE CHAT */
+        #chat { position: fixed; bottom: 85px; right: 15px; width: 320px; height: 420px; display: none; flex-direction: column; z-index: 10000; }
+        #msgBox { flex: 1; overflow-y: auto; padding: 10px; background: #050505; font-size: 14px; }
+        .m-u { background: var(--n-blue); color: #000; align-self: flex-end; padding: 8px; border-radius: 10px; margin: 5px; max-width: 80%; }
+        .m-a { background: #222; color: #fff; padding: 8px; border-radius: 10px; margin: 5px; max-width: 80%; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px 0; border-top: 2px solid var(--neon-blue); z-index: 9998; }
-        .nav-item { color: #444; font-size: 10px; text-align: center; cursor: pointer; }
-        .nav-item.active { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); }
-
-        section { display: none; padding: 20px 15px 120px; }
+        .nav-bot { position: fixed; bottom: 0; width: 100%; background: #000; border-top: 2px solid var(--n-blue); display: flex; justify-content: space-around; padding: 10px 0; z-index: 999; }
+        .nav-btn { color: #555; text-align: center; font-size: 11px; cursor: pointer; }
+        .nav-btn.active { color: var(--n-blue); }
+        section { display: none; padding: 20px; animation: fadeIn 0.3s; }
         .active-sec { display: block !important; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop>
+<audio id="djMusic" loop>
     <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Ketsa/Raising_Frequency/Ketsa_-_08_-_Day_Trip.mp3" type="audio/mpeg">
 </audio>
 
-<div id="chatBox" class="glass">
-    <div class="p-2 border-bottom border-info d-flex justify-content-between align-items-center">
-        <span class="text-info fw-bold">DANIEL_SUPPORT</span>
-        <i class="fas fa-times" onclick="toggleChat()"></i>
-    </div>
-    <div id="chatMsg" class="d-flex flex-column"></div>
-    <div class="p-2 bg-dark d-flex gap-1">
-        <label class="btn btn-dark btn-sm m-0"><i class="fas fa-image"></i><input type="file" hidden onchange="sendImg()"></label>
-        <input type="text" id="chatInp" class="form-control form-control-sm bg-black text-white" placeholder="Pesan...">
-        <button class="btn btn-info btn-sm" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
-    </div>
-</div>
-
-<div id="authPage">
-    <div class="glass p-4 w-100" style="max-width:360px;">
-        <h2 class="text-center text-info fw-bold mb-4">IRANVEST</h2>
-        <div id="loginArea">
-            <input type="text" id="uL" class="form-control mb-3 bg-dark text-white border-info" placeholder="ID_USER">
-            <input type="password" id="pL" class="form-control mb-4 bg-dark text-white border-info" placeholder="PASSWORD">
-            <button class="btn btn-cyber w-100 py-3" onclick="doLogin()">AUTHORIZE</button>
-            <p class="text-center mt-3 small">Baru? <span class="text-info pointer" onclick="toggleAuth(true)" style="cursor:pointer">Daftar Akun</span></p>
+<div id="authLayer">
+    <div class="glass p-4 w-100 mx-3" style="max-width:350px;">
+        <h2 class="text-center text-info mb-4 fw-bold" style="letter-spacing:4px;">IRANVEST</h2>
+        <div id="formIn">
+            <input type="text" id="userL" class="form-control bg-dark text-white border-info mb-3" placeholder="USERNAME">
+            <input type="password" id="passL" class="form-control bg-dark text-white border-info mb-4" placeholder="PASSWORD">
+            <button class="btn-cyber" onclick="login()">LOGIN_SYSTEM</button>
+            <p class="text-center mt-3 small">No Account? <span class="text-info" onclick="toggleF(1)">Register</span></p>
         </div>
-        <div id="regArea" style="display:none;">
-            <input type="text" id="uR" class="form-control mb-3 bg-dark text-white border-info" placeholder="NEW_ID">
-            <input type="password" id="pR" class="form-control mb-4 bg-dark text-white border-info" placeholder="NEW_PASSWORD">
-            <button class="btn btn-cyber w-100 py-3" onclick="doReg()">INITIALIZE</button>
-            <p class="text-center mt-3 small"><span class="text-info pointer" onclick="toggleAuth(false)" style="cursor:pointer">Kembali Login</span></p>
+        <div id="formUp" style="display:none">
+            <input type="text" id="userR" class="form-control bg-dark text-white border-info mb-3" placeholder="NEW_USER">
+            <input type="password" id="passR" class="form-control bg-dark text-white border-info mb-4" placeholder="NEW_PASS">
+            <button class="btn-cyber" onclick="register()">CREATE_NODE</button>
+            <p class="text-center mt-3 small"><span class="text-info" onclick="toggleF(0)">Back to Login</span></p>
         </div>
     </div>
 </div>
 
-<div id="mainApp">
-    <section id="sec-home" class="active-sec">
+<div id="appLayer">
+    <div id="chat" class="glass">
+        <div class="p-2 border-bottom border-info d-flex justify-content-between">
+            <span>DANIEL_SUPPORT</span>
+            <i class="fas fa-times" onclick="toggleChat()"></i>
+        </div>
+        <div id="msgBox" class="d-flex flex-column"></div>
+        <div class="p-2 d-flex gap-1">
+            <input type="text" id="chatIn" class="form-control bg-dark text-white btn-sm" placeholder="Message...">
+            <button class="btn btn-info btn-sm" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <section id="home" class="active-sec">
         <div class="d-flex justify-content-between mb-3">
-            <h5 class="text-info">MARKET_MINING</h5>
-            <h5 class="text-warning" id="bal">Rp 0</h5>
+            <span class="text-info">MARKET_PULSE</span>
+            <span id="balDisplay" class="text-warning">Rp 0</span>
         </div>
-        <div id="chart" class="glass mb-4" style="height:200px;"></div>
-        <div class="stock-grid row g-2" id="stocks"></div>
+        <div id="mainChart" class="glass mb-4" style="height:200px"></div>
+        <div class="row g-2" id="stockContainer"></div>
     </section>
 
-    <section id="sec-mission">
+    <section id="mine">
         <h5 class="text-info mb-4">MINING_STATION</h5>
-        <div id="missionList"></div>
+        <div id="mineList"></div>
     </section>
 
-    <section id="sec-wallet">
-        <h5 class="text-info mb-4">WALLET_DEPT</h5>
+    <section id="wallet">
+        <h5 class="text-info mb-3">DEPOSIT_FUNDS</h5>
         <div class="glass p-3 mb-4 text-center">
-            <p class="text-info small">Transfer DANA: 085714438874</p>
-            <button class="btn btn-cyber w-100 mb-2" onclick="toggleChat()">KONFIRMASI VIA CHAT</button>
+            <p class="mb-1">Transfer DANA: 085714438874</p>
+            <p class="small text-secondary mb-3">Kirim bukti screenshot ke chat admin.</p>
+            <button class="btn btn-outline-info btn-sm w-100" onclick="toggleChat()">BUKA CHAT KONFIRMASI</button>
         </div>
     </section>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="nav('sec-home', this)"><i class="fas fa-microchip fa-lg"></i><br>HOME</div>
-        <div class="nav-item" onclick="nav('sec-mission', this)"><i class="fas fa-hammer fa-lg"></i><br>MINING</div>
-        <div class="nav-item" onclick="nav('sec-wallet', this)"><i class="fas fa-wallet fa-lg"></i><br>WALLET</div>
-        <div class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt fa-lg"></i><br>EXIT</div>
+    <div class="nav-bot">
+        <div class="nav-btn active" onclick="nav('home', this)"><i class="fas fa-chart-bar fa-lg"></i><br>HOME</div>
+        <div class="nav-btn" onclick="nav('mine', this)"><i class="fas fa-hammer fa-lg"></i><br>MINE</div>
+        <div class="nav-btn" onclick="nav('wallet', this)"><i class="fas fa-wallet fa-lg"></i><br>DEPO</div>
+        <div class="nav-btn" onclick="logout()"><i class="fas fa-power-off fa-lg"></i><br>EXIT</div>
     </div>
 </div>
 
@@ -137,119 +125,126 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    let session = localStorage.getItem("uSess");
 
-    // -- PERBAIKAN LOGIKA STARTUP --
+    // --- FIX STARTUP LOGIC ---
     window.onload = () => {
-        const session = localStorage.getItem("uSess");
         if (session && session !== "undefined") {
             db.ref('users/' + session).once('value', s => {
-                if(s.exists()) {
-                    launchMainApp(session);
-                } else {
-                    localStorage.clear();
-                    launchAuth();
-                }
+                if(s.exists()) showMain();
+                else logout();
             });
         } else {
-            launchAuth();
+            showAuth();
         }
     };
 
-    function launchAuth() {
-        document.getElementById('mainApp').style.display = 'none';
-        document.getElementById('authPage').style.display = 'flex';
+    function showAuth() {
+        document.getElementById('authLayer').style.display = 'flex';
+        document.getElementById('appLayer').style.display = 'none';
     }
 
-    function launchMainApp(user) {
-        document.getElementById('authPage').style.display = 'none';
-        document.getElementById('mainApp').style.display = 'block';
-        init(user);
+    function showMain() {
+        document.getElementById('authLayer').style.display = 'none';
+        document.getElementById('appLayer').style.display = 'block';
+        startEngine();
     }
 
-    // -- AUTH ACTIONS --
-    function doLogin() {
-        const u = document.getElementById('uL').value.trim();
-        const p = document.getElementById('pL').value.trim();
-        if(!u || !p) return;
+    // --- AUTH ---
+    function toggleF(r) {
+        document.getElementById('formIn').style.display = r?'none':'block';
+        document.getElementById('formUp').style.display = r?'block':'none';
+    }
+
+    function login() {
+        const u = document.getElementById('userL').value.trim();
+        const p = document.getElementById('passL').value.trim();
         db.ref('users/'+u).once('value', s => {
             if(s.exists() && s.val().password === p) {
                 localStorage.setItem("uSess", u);
                 location.reload();
-            } else alert("INVALID ACCESS");
+            } else alert("ACCESS_DENIED");
         });
     }
 
-    function doReg() {
-        const u = document.getElementById('uR').value.trim();
-        const p = document.getElementById('pR').value.trim();
-        if(!u || !p) return;
+    function register() {
+        const u = document.getElementById('userR').value.trim();
+        const p = document.getElementById('passR').value.trim();
         db.ref('users/'+u).set({password:p, saldo:0}).then(() => {
             localStorage.setItem("uSess", u);
             location.reload();
         });
     }
 
-    function toggleAuth(r) {
-        document.getElementById('loginArea').style.display = r?'none':'block';
-        document.getElementById('regArea').style.display = r?'block':'none';
-    }
-
-    // -- MAIN LOGIC --
-    function init(session) {
-        // Sync Saldo
+    // --- CORE APP ---
+    function startEngine() {
         db.ref('users/'+session+'/saldo').on('value', s => {
-            document.getElementById('bal').innerText = "Rp " + (s.val() || 0).toLocaleString();
+            document.getElementById('balDisplay').innerText = "Rp " + (s.val() || 0).toLocaleString();
         });
-        
-        // Stock List
-        let sc = "";
+
+        // 60 Stocks
+        let html = "";
         for(let i=1; i<=60; i++) {
-            sc += `<div class="col-6"><div class="glass p-2 text-center" onclick="buy(${i})">
+            html += `<div class="col-6"><div class="glass p-2 text-center" onclick="buy(${i})">
                 <img src="https://picsum.photos/seed/${i}/100/60" class="w-100 rounded mb-1">
-                <div class="small fw-bold">NODE_V${i}</div>
-                <div class="text-info small">Rp ${ (10000 * i).toLocaleString() }</div>
+                <small class="d-block fw-bold">NODE_T${i}</small>
+                <small class="text-info">Rp${(10000*i).toLocaleString()}</small>
             </div></div>`;
         }
-        document.getElementById('stocks').innerHTML = sc;
+        document.getElementById('stockContainer').innerHTML = html;
 
-        // Init Chart & Missions
         initChart();
-        renderMissions(session);
-        
-        // Music Trigger
-        document.body.addEventListener('click', () => { document.getElementById('bgMusic').play(); }, {once:true});
+        syncMine();
+        document.body.addEventListener('click', () => document.getElementById('djMusic').play(), {once:true});
     }
 
-    function renderMissions(session) {
+    function buy(i) {
+        const price = 10000*i;
+        const profit = 2000 + (i*100);
+        db.ref('users/'+session+'/saldo').once('value', s => {
+            if(s.val() >= price) {
+                db.ref('users/'+session).update({saldo: s.val() - price});
+                db.ref('users/'+session+'/contracts/'+Date.now()).set({
+                    name: `NODE_T${i}`, daily: profit, clicks: 0, done: 0
+                });
+                alert("NODE_ACTIVE!");
+            } else alert("INSUFFICIENT_FUNDS");
+        });
+    }
+
+    // --- MINING MISSION ---
+    function syncMine() {
         db.ref('users/'+session+'/contracts').on('value', s => {
-            const list = document.getElementById('missionList');
-            if(!s.exists()) return list.innerHTML = "<p class='text-center'>Beli Stock untuk mulai Mining.</p>";
-            list.innerHTML = "";
+            const cont = document.getElementById('mineList');
+            if(!s.exists()) return cont.innerHTML = "<p class='text-center text-secondary mt-5'>No active mining nodes.</p>";
+            cont.innerHTML = "";
             s.forEach(c => {
                 const d = c.val();
-                list.innerHTML += `
+                cont.innerHTML += `
                     <div class="glass p-3 mb-3 text-center">
-                        <h6>${d.name}</h6>
-                        <div class="mining-node" onclick="mine('${c.key}')">
+                        <h6 class="text-info">${d.name}</h6>
+                        <div class="mine-circle" onclick="doMine('${c.key}')">
                             <i class="fas fa-hammer fa-2x text-info"></i>
                         </div>
-                        <p class="small">Clicks: ${d.clicks || 0}/50 | Hari ini: ${d.missions_done || 0}/3</p>
-                    </div>
-                `;
+                        <div class="progress bg-dark mb-2" style="height:6px">
+                            <div class="progress-bar bg-info" style="width:${(d.clicks/50)*100}%"></div>
+                        </div>
+                        <small>Progress: ${d.clicks}/50 | Hari ini: ${d.done}/3</small>
+                    </div>`;
             });
         });
     }
 
-    function mine(cid) {
-        const session = localStorage.getItem("uSess");
+    function doMine(cid) {
         db.ref('users/'+session+'/contracts/'+cid).once('value', s => {
             let d = s.val();
-            if(d.missions_done >= 3) return alert("Limit!");
+            if(d.done >= 3) return alert("Limit Harian Tercapai!");
             let next = (d.clicks || 0) + 1;
             if(next >= 50) {
-                db.ref('users/'+session+'/contracts/'+cid).update({clicks:0, missions_done: (d.missions_done+1)});
-                if(d.missions_done + 1 === 3) {
+                db.ref('users/'+session+'/contracts/'+cid).update({clicks: 0, done: d.done+1});
+                if(d.done + 1 === 3) {
                     db.ref('users/'+session+'/saldo').transaction(v => v + d.daily);
+                    alert("MINING_SUCCESS: Profit masuk ke saldo!");
                 }
             } else {
                 db.ref('users/'+session+'/contracts/'+cid).update({clicks: next});
@@ -257,26 +252,39 @@
         });
     }
 
+    // --- CHAT ---
+    function toggleChat() {
+        const c = document.getElementById('chat');
+        c.style.display = (c.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function sendMsg() {
+        const i = document.getElementById('chatIn');
+        if(!i.value) return;
+        const b = document.getElementById('msgBox');
+        b.innerHTML += `<div class="m-u">${i.value}</div>`;
+        i.value = "";
+        setTimeout(() => {
+            b.innerHTML += `<div class="m-a">Pesan diterima. Admin Daniel sedang memproses permintaanmu.</div>`;
+            b.scrollTop = b.scrollHeight;
+        }, 1000);
+    }
+
     function initChart() {
-        const c = LightweightCharts.createChart(document.getElementById('chart'), {
+        const c = LightweightCharts.createChart(document.getElementById('mainChart'), {
             layout: { backgroundColor: 'transparent', textColor: '#00f3ff' },
             grid: { vertLines: { color: '#111' }, horzLines: { color: '#111' } },
         });
         const l = c.addLineSeries({ color: '#00f3ff' });
-        let b = 100;
-        setInterval(() => { b += (Math.random()-0.48)*5; l.update({ time: Date.now()/1000, value: b }); }, 2000);
+        let v = 100;
+        setInterval(() => { v += (Math.random()-0.48)*5; l.update({ time: Date.now()/1000, value: v }); }, 2000);
     }
 
     function nav(id, el) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active-sec'));
         document.getElementById(id).classList.add('active-sec');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
-    }
-
-    function toggleChat() {
-        const c = document.getElementById('chatBox');
-        c.style.display = c.style.display === 'flex' ? 'none' : 'flex';
     }
 
     function logout() { localStorage.clear(); location.reload(); }
