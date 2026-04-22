@@ -3,97 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT DANIEL TECHNOLOGY</title>
+    <title>PT DANIEL TECHNOLOGY | Premium Investment</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        :root { --bg: #030d16; --card: rgba(255,255,255,0.05); --gold: #ffcc00; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root { --gold: #ffcc00; --dark: #020a10; --glass: rgba(255, 255, 255, 0.05); }
+        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
-        .glass-card { 
-            background: var(--card); 
-            backdrop-filter: blur(15px); 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 20px; 
-            padding: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        /* Glassmorphism UI */
+        .glass { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
+        .btn-gold { background: linear-gradient(45deg, #ffcc00, #ff9900); color: #000; font-weight: bold; border: none; border-radius: 12px; transition: 0.3s; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,204,0,0.3); }
+
+        /* Navigation Bar */
+        .nav-bottom { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(2, 10, 16, 0.95); border-top: 1px solid var(--glass); display: flex; justify-content: space-around; padding: 12px; z-index: 1000; }
+        .nav-item { color: #888; text-decoration: none; font-size: 0.7rem; text-align: center; }
+        .nav-item.active { color: var(--gold); }
+
+        section { display: none; padding-bottom: 80px; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .btn-action { background: var(--card); border: 1px solid var(--gold); color: white; transition: 0.3s; }
-        .btn-action:hover { background: var(--gold); color: black; }
-        
-        .status-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 5px; }
-        .pending { background: #664d03; color: #ffecb5; }
-        
-        #authSection, #mainDashboard { display: none; }
+        /* List Product */
+        .product-card { padding: 15px; margin-bottom: 15px; border-left: 4px solid var(--gold); }
+        .chat-box { height: 300px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div id="authSection" class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
-    <div class="glass-card w-100" style="max-width: 400px;">
-        <div class="text-center mb-4">
-            <h3 class="fw-bold text-warning">IRANVEST</h3>
-            <p class="text-secondary small">Quantum Investment Network</p>
+<div id="authPage" class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="glass p-4 w-100" style="max-width: 400px;">
+        <h2 class="text-center fw-bold text-warning mb-4">IRANVEST</h2>
+        <div id="loginForm">
+            <input type="text" id="lUser" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username">
+            <input type="password" id="lPass" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Password">
+            <button class="btn btn-gold w-100" onclick="login()">LOGIN</button>
+            <p class="text-center mt-3 small">Belum punya akun? <a href="#" class="text-warning" onclick="toggleAuth()">Daftar</a></p>
         </div>
-        <input type="text" id="username" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username">
-        <input type="password" id="password" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Password">
-        <button class="btn btn-warning w-100 fw-bold mb-3" onclick="handleLogin()">LOGIN</button>
-        <p class="text-center small">Belum punya akun? <a href="#" class="text-warning" onclick="handleRegister()">Daftar Disini</a></p>
+        <div id="regForm" style="display:none;">
+            <input type="text" id="rUser" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username Baru">
+            <input type="password" id="rPass" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Password Baru">
+            <button class="btn btn-gold w-100" onclick="register()">DAFTAR SEKARANG</button>
+            <p class="text-center mt-3 small">Sudah ada akun? <a href="#" class="text-warning" onclick="toggleAuth()">Masuk</a></p>
+        </div>
     </div>
 </div>
 
-<div id="mainDashboard" class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h5 class="fw-bold text-warning">DANIEL TECHNOLOGY</h5>
-        <button class="btn btn-sm btn-danger" onclick="logout()">Keluar</button>
+<div id="mainUI" style="display:none;">
+    <div class="container mt-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold m-0"><i class="fas fa-crown text-warning me-2"></i>DANIEL TECH</h5>
+        <span class="badge bg-dark border border-secondary" id="userNameDisplay">User</span>
     </div>
 
-    <div class="glass-card text-center mb-4">
-        <p class="text-secondary small mb-1" id="welcomeUser">Halo, Investor</p>
-        <h1 id="uSaldo" class="fw-bold">Rp 0</h1>
-        <div class="row mt-4">
-            <div class="col-6">
-                <button class="btn btn-action w-100" data-bs-toggle="modal" data-bs-target="#mDepo">
-                    <i class="fas fa-plus-circle me-2"></i>Isi Saldo
-                </button>
+    <section id="home" style="display: block;">
+        <div class="container mt-4">
+            <div class="glass p-4 text-center mb-4">
+                <p class="text-secondary small mb-1">TOTAL BALANCE</p>
+                <h1 class="fw-bold" id="userBalance">Rp 0</h1>
             </div>
-            <div class="col-6">
-                <button class="btn btn-action w-100" data-bs-toggle="modal" data-bs-target="#mWD">
-                    <i class="fas fa-paper-plane me-2"></i>Tarik Dana
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <h6 class="fw-bold mb-3 ms-2">RIWAYAT TRANSAKSI</h6>
-    <div id="historyList">
-        </div>
-</div>
-
-<div class="modal fade" id="mDepo" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark border-secondary">
-            <div class="modal-body text-center p-4">
-                <h5 class="text-warning fw-bold mb-3">Deposit Dana</h5>
-                <div class="p-3 bg-secondary bg-opacity-25 rounded-3 mb-3">
-                    <small class="text-secondary">Transfer Ke DANA:</small><br>
-                    <strong class="fs-5">0857-1443-8874</strong>
+            
+            <h6 class="fw-bold mb-3">LIST PRODUCT INVESTASI</h6>
+            <div id="productList">
                 </div>
-                <input type="number" id="amtDep" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Nominal Rp">
-                <button class="btn btn-warning w-100 fw-bold" onclick="reqDep()">KONFIRMASI SUDAH BAYAR</button>
+        </div>
+    </section>
+
+    <section id="deposit">
+        <div class="container mt-4">
+            <h5 class="fw-bold mb-4">Top Up Saldo</h5>
+            <div class="row g-3">
+                <div class="col-6"><button class="btn glass w-100 text-white p-3" onclick="doDepo(10000)">Rp 10k</button></div>
+                <div class="col-6"><button class="btn glass w-100 text-white p-3" onclick="doDepo(20000)">Rp 20k</button></div>
+                <div class="col-6"><button class="btn glass w-100 text-white p-3" onclick="doDepo(50000)">Rp 50k</button></div>
+                <div class="col-12"><button class="btn glass w-100 text-white p-3" onclick="doDepo(100000)">Rp 100k</button></div>
+                <div class="col-12"><button class="btn btn-gold w-100 p-3" onclick="doDepo(1000000)">Rp 1 Juta</button></div>
             </div>
         </div>
+    </section>
+
+    <section id="withdraw">
+        <div class="container mt-4">
+            <h5 class="fw-bold mb-4">Penarikan Dana</h5>
+            <div class="glass p-3 mb-3">
+                <label class="small text-secondary">Pilih Nominal:</label>
+                <select id="wdAmount" class="form-select bg-dark text-white border-0 mt-2">
+                    <option value="50000">Rp 50.000</option>
+                    <option value="100000">Rp 100.000</option>
+                    <option value="1000000">Rp 1.000.000</option>
+                </select>
+                <input type="text" id="wdBank" class="form-control bg-dark text-white border-secondary mt-3" placeholder="Nomor DANA / Rekening">
+                <button class="btn btn-gold w-100 mt-4" onclick="doWithdraw()">TARIK SEKARANG</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="profile">
+        <div class="container mt-4 text-center">
+            <div class="glass p-4">
+                <i class="fas fa-user-circle fa-4x text-warning mb-3"></i>
+                <h4 id="profileName">Investor Name</h4>
+                <hr>
+                <button class="btn btn-outline-warning w-100 mb-2" onclick="changePass()">GANTI PASSWORD</button>
+                <button class="btn btn-outline-danger w-100" onclick="logout()">KELUAR AKUN</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="chat">
+        <div class="container mt-4">
+            <h5 class="fw-bold mb-3">Live Support Chat</h5>
+            <div class="glass p-3">
+                <div id="chatBox" class="chat-box mb-3"></div>
+                <div class="d-flex gap-2">
+                    <input type="text" id="chatInput" class="form-control bg-dark text-white border-secondary" placeholder="Tulis pesan...">
+                    <button class="btn btn-gold" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="nav-bottom">
+        <a href="javascript:void(0)" class="nav-item active" onclick="showSec('home', this)"><i class="fas fa-home fa-lg"></i><br>Home</a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showSec('deposit', this)"><i class="fas fa-wallet fa-lg"></i><br>Deposit</a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showSec('withdraw', this)"><i class="fas fa-money-bill-wave fa-lg"></i><br>Withdraw</a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showSec('chat', this)"><i class="fas fa-comments fa-lg"></i><br>Chat</a>
+        <a href="javascript:void(0)" class="nav-item" onclick="showSec('profile', this)"><i class="fas fa-user-cog fa-lg"></i><br>Profil</a>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // Konfigurasi Database Singapore Daniel
+    // FIREBASE CONFIG (DANIEL TECH SINGAPORE)
     const firebaseConfig = {
         apiKey: "AIzaSyCwrvbPBNwB0r7PSdFBqa4wS2gag-MmpDE",
         authDomain: "my-invest-database.firebaseapp.com",
@@ -106,82 +150,120 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    let session = localStorage.getItem("uSess");
+    let user = localStorage.getItem("uSess");
 
-    // Fungsi Login
-    function handleLogin() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
-        db.ref('users/' + u).once('value', s => {
-            const d = s.val();
-            if(d && d.password === p) {
-                localStorage.setItem("uSess", u);
-                location.reload();
-            } else { alert("Login Gagal!"); }
-        });
+    // AUTH FUNCTIONS
+    function toggleAuth() { 
+        document.getElementById('loginForm').style.display = document.getElementById('loginForm').style.display === 'none' ? 'block' : 'none';
+        document.getElementById('regForm').style.display = document.getElementById('regForm').style.display === 'none' ? 'block' : 'none';
     }
 
-    // Fungsi Register (Pakai Prompt agar simpel)
-    function handleRegister() {
-        const u = prompt("Username Baru:");
-        const p = prompt("Password Baru:");
+    function register() {
+        const u = document.getElementById('rUser').value;
+        const p = document.getElementById('rPass').value;
         if(u && p) {
-            db.ref('users/' + u).set({ username: u, password: p, saldo: 0 })
-            .then(() => alert("Berhasil! Silakan Login."));
+            db.ref('users/'+u).set({ username: u, password: p, saldo: 0 }).then(() => { alert("Daftar Berhasil!"); location.reload(); });
         }
     }
 
-    // Fungsi Kirim Deposit ke Database
-    function reqDep() {
-        const amount = document.getElementById('amtDep').value;
-        if(amount < 1000) return alert("Minimal Rp 1.000");
-        
-        db.ref('transactions/' + session + '/DEP' + Date.now()).set({
-            type: "DEPOSIT",
-            amount: amount,
-            status: "PENDING",
-            date: new Date().toLocaleDateString()
-        }).then(() => {
-            alert("Laporan terkirim! Admin akan mengecek saldo Anda.");
-            location.reload();
+    function login() {
+        const u = document.getElementById('lUser').value;
+        const p = document.getElementById('lPass').value;
+        db.ref('users/'+u).once('value', s => {
+            if(s.val() && s.val().password === p) {
+                localStorage.setItem("uSess", u);
+                location.reload();
+            } else alert("Username/Password Salah!");
         });
     }
 
-    // Logika Tampilan (Jika sudah login)
-    if(session) {
-        document.getElementById('authSection').style.display = 'none';
-        document.getElementById('mainDashboard').style.display = 'block';
-        document.getElementById('welcomeUser').innerText = "Halo, " + session;
+    // NAVIGATION SYSTEM
+    function showSec(id, el) {
+        document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+    }
 
-        // Ambil Saldo Real-time
-        db.ref('users/' + session + '/saldo').on('value', s => {
-            document.getElementById('uSaldo').innerText = "Rp " + (s.val() || 0).toLocaleString();
+    // CORE FEATURES
+    if(user) {
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('mainUI').style.display = 'block';
+        document.getElementById('userNameDisplay').innerText = user.toUpperCase();
+        document.getElementById('profileName').innerText = user.toUpperCase();
+
+        // Realtime Saldo & Chart Data
+        db.ref('users/'+user).on('value', s => {
+            document.getElementById('userBalance').innerText = "Rp " + parseInt(s.val().saldo).toLocaleString('id-ID');
         });
 
-        // Ambil Riwayat
-        db.ref('transactions/' + session).on('value', s => {
-            const list = document.getElementById('historyList');
+        // Load Product dari Database (Folder: Stockproduct)
+        db.ref('stockproduct').on('value', s => {
+            const list = document.getElementById('productList');
             list.innerHTML = "";
-            s.forEach(item => {
-                const v = item.val();
+            if(!s.exists()) { list.innerHTML = "<p class='small text-secondary text-center'>Belum ada paket tersedia.</p>"; }
+            s.forEach(p => {
+                const data = p.val();
                 list.innerHTML += `
-                    <div class="glass-card p-3 mb-2 d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-secondary">${v.date}</small><br>
-                            <strong>${v.type}</strong>
-                        </div>
-                        <div class="text-end">
-                            <span class="fw-bold">Rp ${parseInt(v.amount).toLocaleString()}</span><br>
-                            <span class="status-badge pending">${v.status}</span>
-                        </div>
-                    </div>`;
+                <div class="glass product-card">
+                    <h6 class="fw-bold mb-1">${data.nama}</h6>
+                    <span class="text-warning small fw-bold">Rp ${parseInt(data.harga).toLocaleString()}</span><br>
+                    <small class="text-secondary">Profit: ${data.profit}% / Hari</small>
+                    <button class="btn btn-sm btn-gold float-end" onclick="buyProduct('${p.key}', ${data.harga})">BELI</button>
+                </div>`;
             });
         });
-    } else {
-        document.getElementById('authSection').style.display = 'flex';
+
+        // Deposit Action
+        window.doDepo = (amt) => {
+            db.ref('transactions/'+user+'/DEP'+Date.now()).set({
+                type: "DEPOSIT", amount: amt, status: "PENDING", date: new Date().toLocaleString()
+            }).then(() => alert("Request Deposit Rp "+amt.toLocaleString()+" dikirim! Segera transfer."));
+        };
+
+        // Withdraw Action
+        window.doWithdraw = () => {
+            const amt = document.getElementById('wdAmount').value;
+            const bank = document.getElementById('wdBank').value;
+            if(!bank) return alert("Isi nomor tujuan!");
+            db.ref('transactions/'+user+'/WD'+Date.now()).set({
+                type: "WITHDRAW", amount: amt, target: bank, status: "PROCESSING", date: new Date().toLocaleString()
+            }).then(() => alert("Permintaan Penarikan Sedang Diproses!"));
+        };
+
+        // Live Chat System
+        window.sendChat = () => {
+            const msg = document.getElementById('chatInput').value;
+            if(!msg) return;
+            db.ref('chats/'+user+'/M'+Date.now()).set({
+                sender: user, text: msg, time: new Date().toLocaleTimeString()
+            });
+            document.getElementById('chatInput').value = "";
+        };
+
+        db.ref('chats/'+user).on('value', s => {
+            const box = document.getElementById('chatBox');
+            box.innerHTML = "";
+            s.forEach(m => {
+                const d = m.val();
+                const isMe = d.sender === user;
+                box.innerHTML += `
+                <div class="mb-2 ${isMe ? 'text-end' : ''}">
+                    <div class="p-2 d-inline-block rounded-3 small" style="background:${isMe ? '#ffcc00' : '#333'}; color:${isMe ? '#000' : '#fff'}">
+                        ${d.text}
+                    </div><br><small style="font-size:10px; color:#888">${d.time}</small>
+                </div>`;
+            });
+            box.scrollTop = box.scrollHeight;
+        });
+
+        window.changePass = () => {
+            const newP = prompt("Masukkan Password Baru:");
+            if(newP) db.ref('users/'+user).update({ password: newP }).then(() => alert("Password diganti!"));
+        }
     }
 
-    function logout() { localStorage.removeItem("uSess"); location.reload(); }
+    function logout() { localStorage.clear(); location.reload(); }
 </script>
 </body>
 </html>
