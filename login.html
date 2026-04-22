@@ -6,85 +6,79 @@
     <title>Login - DANILZ NESIA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    
+    <style>
+        body { background: #05070a; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; transition: 0.3s; }
+        .btn-gold:hover { transform: scale(1.02); opacity: 0.9; }
+        .input-f { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 100%; border-radius: 1.2rem; padding: 1.2rem; outline: none; margin-bottom: 12px; transition: 0.3s; }
+        .input-f:focus { border-color: #FFD700; background: rgba(255,255,255,0.08); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6">
+    <div class="max-w-md w-full glass rounded-[2.5rem] p-10 shadow-2xl">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black italic tracking-tighter text-[#FFD700]">DANILZ<span class="text-white">NESIA</span></h1>
+            <p id="t-title" class="text-xs text-gray-500 uppercase tracking-[0.3em] mt-2">Access Portal</p>
+        </div>
+
+        <div id="login-box">
+            <input type="email" id="l-email" placeholder="Email Address" class="input-f">
+            <input type="password" id="l-pass" placeholder="Password" class="input-f">
+            <button onclick="doLogin()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase text-sm mt-4 shadow-[0_10px_20px_rgba(255,215,0,0.2)]">Sign In</button>
+            <p class="text-center text-xs text-gray-500 mt-8">Need an account? <a href="#" onclick="toggle('reg')" class="text-yellow-500 font-bold">Register</a></p>
+        </div>
+
+        <div id="reg-box" class="hidden">
+            <input type="text" id="r-nama" placeholder="Full Name" class="input-f">
+            <input type="email" id="r-email" placeholder="Email Address" class="input-f">
+            <input type="password" id="r-pass" placeholder="Password (Min 6)" class="input-f">
+            <button onclick="doRegister()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase text-sm mt-4">Create Account</button>
+            <p class="text-center text-xs text-gray-500 mt-8">Have an account? <a href="#" onclick="toggle('log')" class="text-yellow-500 font-bold">Login</a></p>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIG DANIL (SUDAH TERPASANG)
         const firebaseConfig = {
-          apiKey: "AIzaSyBY7FaSViddpNqnncQ8Vtfp4Jmt7pJ6a80",
-          authDomain: "danilz-nesia.firebaseapp.com",
-          projectId: "danilz-nesia",
-          storageBucket: "danilz-nesia.firebasestorage.app",
-          messagingSenderId: "796392081651",
-          appId: "1:796392081651:web:a36a4545ddf92d97910f86",
-          measurementId: "G-PSMD9SWSE6"
+            apiKey: "AIzaSyBY7FaSViddpNqnncQ8Vtfp4Jmt7pJ6a80",
+            authDomain: "danilz-nesia.firebaseapp.com",
+            projectId: "danilz-nesia",
+            appId: "1:796392081651:web:a36a4545ddf92d97910f86"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // DAFTAR
-        window.handleRegister = async () => {
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
-            const nama = document.getElementById('reg-nama').value;
+        window.doRegister = async () => {
+            const e = document.getElementById('r-email').value;
+            const p = document.getElementById('r-pass').value;
+            const n = document.getElementById('r-nama').value;
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", userCredential.user.uid), {
-                    nama: nama, email: email, balance: 0
-                });
-                alert("Daftar Berhasil!");
-                location.reload();
-            } catch (e) { alert("Error: " + e.message); }
-        };
-
-        // LOGIN
-        window.handleLogin = async () => {
-            const email = document.getElementById('log-email').value;
-            const pass = document.getElementById('log-pass').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
+                const res = await createUserWithEmailAndPassword(auth, e, p);
+                await setDoc(doc(db, "users", res.user.uid), { nama: n, email: e, balance: 0 });
                 window.location.href = "shop.html";
-            } catch (e) { alert("Email atau Password salah!"); }
+            } catch (err) { alert("Registration Failed!"); }
         };
-    </script>
-    
-    <style>
-        body { background: #05070a; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .btn-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; }
-        .input-f { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); width: 100%; border-radius: 1rem; padding: 1rem; outline: none; margin-bottom: 10px; }
-    </style>
-</head>
-<body class="flex items-center justify-center min-h-screen p-6">
-    <div class="max-w-md w-full glass rounded-[2.5rem] p-8 shadow-2xl">
-        <h1 class="text-3xl font-black italic text-center text-[#FFD700] mb-6">DANILZ NESIA</h1>
-        
-        <div id="login-form">
-            <input type="email" id="log-email" placeholder="Email" class="input-f">
-            <input type="password" id="log-pass" placeholder="Password" class="input-f">
-            <button onclick="handleLogin()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase mt-2">Login</button>
-            <p class="text-center text-xs text-gray-500 mt-4">Belum punya akun? <a href="#" onclick="toggleForm('reg')" class="text-yellow-500 font-bold">Daftar</a></p>
-        </div>
 
-        <div id="reg-form" class="hidden">
-            <input type="text" id="reg-nama" placeholder="Nama Lengkap" class="input-f">
-            <input type="email" id="reg-email" placeholder="Email" class="input-f">
-            <input type="password" id="reg-pass" placeholder="Password" class="input-f">
-            <button onclick="handleRegister()" class="btn-gold w-full py-4 rounded-2xl font-black uppercase mt-2">Daftar</button>
-            <p class="text-center text-xs text-gray-500 mt-4">Sudah ada akun? <a href="#" onclick="toggleForm('log')" class="text-yellow-500 font-bold">Masuk</a></p>
-        </div>
-    </div>
+        window.doLogin = async () => {
+            const e = document.getElementById('l-email').value;
+            const p = document.getElementById('l-pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, e, p);
+                window.location.href = "shop.html";
+            } catch (err) { alert("Login Failed!"); }
+        };
 
-    <script>
-        function toggleForm(m) {
-            document.getElementById('login-form').classList.toggle('hidden', m === 'reg');
-            document.getElementById('reg-form').classList.toggle('hidden', m === 'log');
-        }
+        window.toggle = (m) => {
+            document.getElementById('login-box').classList.toggle('hidden', m==='reg');
+            document.getElementById('reg-box').classList.toggle('hidden', m==='log');
+            document.getElementById('t-title').innerText = m==='reg' ? "Create Account" : "Access Portal";
+        };
     </script>
 </body>
 </html>
