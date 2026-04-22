@@ -3,84 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IRANVEST PRO | Daniel Tech</title>
+    <title>IRANVEST V4 | Daniel Technology</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     
     <style>
-        :root { --gold: #ffcc00; --dark: #01080e; --card: rgba(255, 255, 255, 0.05); }
-        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        :root { --gold: #ffcc00; --dark: #01080e; --card: rgba(255, 255, 255, 0.05); --red: #ff4d4d; }
+        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow-x: hidden; }
 
-        /* KUNCI UTAMA: Semua halaman disembunyikan secara default */
-        #authPage, #mainApp { 
-            display: none; 
-            min-height: 100vh;
-        }
+        /* FIX PERMANEN: Sembunyikan semua kontainer utama secara default */
+        #authPage, #mainApp { display: none; min-height: 100vh; }
 
         .glass { background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
         .btn-gold { background: linear-gradient(45deg, #ffcc00, #ff9900); color: black; font-weight: bold; border: none; border-radius: 12px; transition: 0.3s; }
         
+        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(1, 8, 14, 0.98); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 9999; }
         .nav-item { color: #555; text-decoration: none; text-align: center; font-size: 10px; cursor: pointer; }
         .nav-item.active { color: var(--gold); }
 
-        /* Sembunyikan section di dalam dashboard */
-        section { display: none; padding: 20px 15px 100px; }
+        /* Section Controller */
+        section { display: none; padding: 20px 15px 100px; animation: fadeInUp 0.4s ease; }
         .active-sec { display: block !important; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Produk & History */
         .prod-card { background: var(--card); border-radius: 18px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .prod-img { width: 100%; height: 140px; object-fit: cover; background: #111; }
-        #chart-container { height: 180px; width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden; }
+        .prod-img { width: 100%; height: 150px; object-fit: cover; }
         
-        .badge-pending { background: #ffc107; color: black; padding: 4px 8px; border-radius: 5px; font-size: 10px; }
-        .badge-success { background: #28a745; padding: 4px 8px; border-radius: 5px; font-size: 10px; }
+        /* Warna Status */
+        .badge-pending { background: #ffc107; color: black; padding: 4px 8px; border-radius: 6px; font-size: 10px; }
+        .badge-success { background: #28a745; color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; }
+        .badge-rejected { background: var(--red); color: white; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; }
+
+        /* Music Toggle */
+        #musicBtn { position: fixed; top: 15px; right: 15px; z-index: 10000; width: 40px; height: 40px; border-radius: 50%; background: var(--gold); border: none; color: black; }
     </style>
 </head>
 <body>
 
+<audio id="djBacksound" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+<button id="musicBtn" onclick="toggleMusic()"><i class="fas fa-music"></i></button>
+
 <div id="authPage" class="container align-items-center justify-content-center">
     <div class="glass p-4 w-100" style="max-width:380px;">
-        <h2 class="text-center text-warning fw-bold mb-4">IRANVEST</h2>
+        <div class="text-center mb-4">
+            <h2 class="text-warning fw-bold mb-0">IRANVEST</h2>
+            <small class="text-secondary">Daniel Tech Investment</small>
+        </div>
         <div id="loginBox">
             <input type="text" id="uL" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username">
             <input type="password" id="pL" class="form-control mb-4 bg-dark text-white border-secondary" placeholder="Password">
             <button class="btn btn-gold w-100 py-3" onclick="doLogin()">SIGN IN</button>
-            <p class="text-center mt-3 small text-secondary">Belum punya akun? <a href="javascript:void(0)" class="text-warning text-decoration-none" onclick="toggleAuth(true)">Daftar</a></p>
+            <p class="text-center mt-3 small">Belum ada akun? <a href="javascript:void(0)" class="text-warning" onclick="toggleAuth(true)">Daftar</a></p>
         </div>
         <div id="regBox" style="display:none;">
             <input type="text" id="uR" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username Baru">
             <input type="password" id="pR" class="form-control mb-4 bg-dark text-white border-secondary" placeholder="Password Baru">
-            <button class="btn btn-gold w-100 py-3" onclick="doReg()">DAFTAR SEKARANG</button>
-            <p class="text-center mt-3 small"><a href="javascript:void(0)" class="text-warning text-decoration-none" onclick="toggleAuth(false)">Kembali Login</a></p>
+            <button class="btn btn-gold w-100 py-3" onclick="doReg()">BUAT AKUN</button>
+            <p class="text-center mt-3 small"><a href="javascript:void(0)" class="text-warning" onclick="toggleAuth(false)">Kembali Login</a></p>
         </div>
     </div>
 </div>
 
 <div id="mainApp">
     <section id="sec-home" class="active-sec">
-        <div class="d-flex justify-content-between mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="fw-bold text-warning m-0">DANIEL TECH</h5>
-            <span class="badge bg-dark border border-secondary" id="displayUser">Investor</span>
+            <span class="badge bg-dark border border-secondary" id="displayUser">User</span>
         </div>
-        <div id="chart-container" class="glass"></div>
+
+        <div id="chart-container" class="glass mb-4" style="height: 180px;"></div>
+
         <div class="glass p-3 text-center mb-4">
             <p class="text-secondary small mb-1">SALDO AKTIF</p>
             <h2 class="fw-bold" id="labelSaldo">Rp 0</h2>
         </div>
-        <h6 class="fw-bold mb-3">LIST PRODUK</h6>
+
+        <h6 class="fw-bold mb-3">INVESTMENT PRODUCTS</h6>
         <div class="prod-card">
-            <img src="https://images.unsplash.com/photo-1611974714658-66d2f13c9ad8?q=80&w=500" class="prod-img">
+            <img src="https://images.unsplash.com/photo-1614028674026-a65e31bfd27c?q=80&w=500" class="prod-img">
             <div class="p-3 d-flex justify-content-between align-items-center">
-                <div><h6 class="fw-bold m-0 text-warning">Gold Mining</h6><small class="text-secondary">Profit 5%/Day</small></div>
+                <div><h6 class="fw-bold m-0 text-warning">Starter Pack</h6><small class="text-secondary">Profit 5%/Day</small></div>
                 <button class="btn btn-gold btn-sm px-3" onclick="buy(10000)">10k</button>
             </div>
         </div>
         <div class="prod-card">
-            <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=500" class="prod-img">
+            <img src="https://images.unsplash.com/photo-1633156189779-2143ca3ee43f?q=80&w=500" class="prod-img">
             <div class="p-3 d-flex justify-content-between align-items-center">
-                <div><h6 class="fw-bold m-0 text-warning">Crypto VIP</h6><small class="text-secondary">Profit 10%/Day</small></div>
+                <div><h6 class="fw-bold m-0 text-warning">Crypto Whale</h6><small class="text-secondary">Profit 10%/Day</small></div>
                 <button class="btn btn-gold btn-sm px-3" onclick="buy(50000)">50k</button>
             </div>
         </div>
@@ -89,44 +104,44 @@
     <section id="sec-depo">
         <h5 class="fw-bold mb-4">Deposit Saldo</h5>
         <div class="glass p-3 mb-4">
-            <input type="number" id="customDepo" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Minimal 10.000">
-            <button class="btn btn-gold w-100 py-3" onclick="doDepo()">PROSES DEPOSIT</button>
+            <input type="number" id="customDepo" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Input Nominal Bebas">
+            <button class="btn btn-gold w-100 py-3" onclick="doDepo()">DEPOSIT SEKARANG</button>
         </div>
         <h6 class="fw-bold mb-3 small text-secondary">HISTORY DEPOSIT</h6>
         <div id="histDepo"></div>
     </section>
 
     <section id="sec-wd">
-        <h5 class="fw-bold mb-4">Penarikan Dana</h5>
+        <h5 class="fw-bold mb-4">Withdrawal</h5>
         <div class="glass p-3 mb-4">
             <input type="number" id="customWD" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Nominal WD">
-            <input type="text" id="targetWD" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Nomor DANA">
-            <button class="btn btn-gold w-100 py-3" onclick="doWD()">PROSES WD</button>
+            <input type="text" id="targetWD" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Nomor Dana">
+            <button class="btn btn-gold w-100 py-3" onclick="doWD()">TARIK DANA</button>
         </div>
         <h6 class="fw-bold mb-3 small text-secondary">HISTORY WD</h6>
         <div id="histWD"></div>
     </section>
 
     <section id="sec-prof">
-        <div class="text-center mb-4">
-            <div class="bg-warning mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:70px; height:70px;">
-                <i class="fas fa-user-circle fa-3x text-dark"></i>
+        <div class="text-center mb-5">
+            <div class="bg-warning mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:80px; height:80px;">
+                <i class="fas fa-user-shield fa-3x text-dark"></i>
             </div>
-            <h5 class="fw-bold mb-0" id="profName">Daniel</h5>
-            <small class="text-secondary">Investor Level 1</small>
+            <h5 class="fw-bold mb-0" id="profName">Daniel User</h5>
+            <small class="text-secondary">Premium Membership</small>
         </div>
         <div class="glass p-3 mb-3 d-flex justify-content-between align-items-center" onclick="alert('DANA: 085714438874')">
-            <span><i class="fas fa-headset text-warning me-3"></i>Bantuan Admin</span>
+            <span><i class="fas fa-headset text-warning me-3"></i>Support Admin</span>
             <i class="fas fa-chevron-right text-secondary"></i>
         </div>
-        <button class="btn btn-outline-danger w-100 mt-4" onclick="logout()">LOGOUT</button>
+        <button class="btn btn-outline-danger w-100 mt-4 border-0" onclick="logout()">LOGOUT</button>
     </section>
 
     <div class="bottom-nav">
         <div class="nav-item active" onclick="nav('sec-home', this)"><i class="fas fa-home fa-lg"></i><br>HOME</div>
         <div class="nav-item" onclick="nav('sec-depo', this)"><i class="fas fa-wallet fa-lg"></i><br>DEPO</div>
-        <div class="nav-item" onclick="nav('sec-wd', this)"><i class="fas fa-money-bill fa-lg"></i><br>WD</div>
-        <div class="nav-item" onclick="nav('sec-prof', this)"><i class="fas fa-user fa-lg"></i><br>PROFILE</div>
+        <div class="nav-item" onclick="nav('sec-wd', this)"><i class="fas fa-money-bill-wave fa-lg"></i><br>WD</div>
+        <div class="nav-item" onclick="nav('sec-prof', this)"><i class="fas fa-user-cog fa-lg"></i><br>PROFILE</div>
     </div>
 </div>
 
@@ -135,113 +150,5 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyCwrvbPBNwB0r7PSdFBqa4wS2gag-MmpDE",
-        authDomain: "my-invest-database.firebaseapp.com",
-        databaseURL: "https://my-invest-database-default-rtdb.asia-southeast1.firebasedatabase.app/",
-        projectId: "my-invest-database",
-        storageBucket: "my-invest-database.firebasestorage.app",
-        messagingSenderId: "397898231978",
-        appId: "1:397898231978:web:ecf7ff6b9682f5e0b660d3"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const session = localStorage.getItem("uSess");
-
-    // LOGIKA FILTERING HALAMAN (PASTI BERHASIL)
-    window.onload = () => {
-        const auth = document.getElementById('authPage');
-        const app = document.getElementById('mainApp');
-
-        if(session) {
-            auth.style.setProperty('display', 'none', 'important');
-            app.style.setProperty('display', 'block', 'important');
-            document.getElementById('displayUser').innerText = session;
-            document.getElementById('profName').innerText = session;
-            startSync();
-            initChart();
-        } else {
-            auth.style.setProperty('display', 'flex', 'important');
-            app.style.setProperty('display', 'none', 'important');
-        }
-    };
-
-    function toggleAuth(r) {
-        document.getElementById('loginBox').style.display = r ? 'none' : 'block';
-        document.getElementById('regBox').style.display = r ? 'block' : 'none';
-    }
-
-    function nav(id, el) {
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active-sec'));
-        document.getElementById(id).classList.add('active-sec');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function startSync() {
-        db.ref('users/'+session+'/saldo').on('value', s => {
-            document.getElementById('labelSaldo').innerText = "Rp " + (s.val() || 0).toLocaleString();
-        });
-        db.ref('transactions/'+session).on('value', s => {
-            const hDepo = document.getElementById('histDepo');
-            const hWD = document.getElementById('histWD');
-            hDepo.innerHTML = ""; hWD.innerHTML = "";
-            s.forEach(t => {
-                const d = t.val();
-                const html = `<div class="glass p-2 mb-2 d-flex justify-content-between small">
-                    <span>Rp ${parseInt(d.amount).toLocaleString()}</span>
-                    <span class="${d.status==='PENDING'?'badge-pending':'badge-success'}">${d.status}</span>
-                </div>`;
-                if(d.type === "DEPO") hDepo.innerHTML = html + hDepo.innerHTML;
-                else hWD.innerHTML = html + hWD.innerHTML;
-            });
-        });
-    }
-
-    function doLogin() {
-        const u = document.getElementById('uL').value;
-        const p = document.getElementById('pL').value;
-        db.ref('users/'+u).once('value', s => {
-            if(s.exists() && s.val().password === p) {
-                localStorage.setItem("uSess", u);
-                location.reload();
-            } else alert("Salah!");
-        });
-    }
-
-    function doReg() {
-        const u = document.getElementById('uR').value;
-        const p = document.getElementById('pR').value;
-        if(u && p) db.ref('users/'+u).set({username:u, password:p, saldo:0}).then(()=>location.reload());
-    }
-
-    function doDepo() {
-        const a = document.getElementById('customDepo').value;
-        if(a < 10000) return alert("Min 10rb");
-        db.ref('transactions/'+session+'/T'+Date.now()).set({type:"DEPO", amount:a, status:"PENDING"})
-        .then(()=>alert("Berhasil! Kirim ke 085714438874"));
-    }
-
-    function doWD() {
-        const a = document.getElementById('customWD').value;
-        const t = document.getElementById('targetWD').value;
-        if(a < 50000) return alert("Min 50rb");
-        db.ref('transactions/'+session+'/T'+Date.now()).set({type:"WD", amount:a, target:t, status:"PROSES"})
-        .then(()=>alert("Diproses!"));
-    }
-
-    function initChart() {
-        const chart = LightweightCharts.createChart(document.getElementById('chart-container'), {
-            layout: { backgroundColor: '#01080e', textColor: '#888' },
-            grid: { vertLines: { visible: false }, horzLines: { color: '#111' } },
-            timeScale: { visible: false }
-        });
-        const lineSeries = chart.addLineSeries({ color: '#ffcc00' });
-        lineSeries.setData([{time:'2023-01-01',value:30},{time:'2023-01-02',value:45},{time:'2023-01-03',value:40},{time:'2023-01-04',value:60}]);
-    }
-
-    function buy(h) { alert("Paket Rp " + h.toLocaleString() + " dalam proses!"); }
-    function logout() { localStorage.clear(); location.reload(); }
-</script>
-</body>
-</html>
+        apiKey: "AIzaSyCwrvbPBNwB0r7PSd
+                
