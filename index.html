@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IRANVEST PRO | Daniel Technology</title>
+    <title>IRANVEST PRO | Daniel Tech</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -11,104 +11,77 @@
     
     <style>
         :root { --gold: #ffcc00; --dark: #01080e; --card: rgba(255, 255, 255, 0.05); }
-        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; }
+        body { background: var(--dark); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+
+        /* KUNCI UTAMA: Semua halaman disembunyikan secara default */
+        #authPage, #mainApp { 
+            display: none; 
+            min-height: 100vh;
+        }
 
         .glass { background: var(--card); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; }
         .btn-gold { background: linear-gradient(45deg, #ffcc00, #ff9900); color: black; font-weight: bold; border: none; border-radius: 12px; transition: 0.3s; }
         
-        /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(1, 8, 14, 0.95); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 999; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(1, 8, 14, 0.98); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #222; z-index: 9999; }
         .nav-item { color: #555; text-decoration: none; text-align: center; font-size: 10px; cursor: pointer; }
         .nav-item.active { color: var(--gold); }
 
-        section { display: none; padding: 20px 15px 100px; animation: fadeIn 0.4s ease; }
+        /* Sembunyikan section di dalam dashboard */
+        section { display: none; padding: 20px 15px 100px; }
         .active-sec { display: block !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Product Design */
         .prod-card { background: var(--card); border-radius: 18px; overflow: hidden; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
         .prod-img { width: 100%; height: 140px; object-fit: cover; background: #111; }
+        #chart-container { height: 180px; width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden; }
         
-        /* History Badge */
-        .badge-pending { background: #ffc107; color: black; }
-        .badge-success { background: #28a745; }
-
-        #chart-container { height: 200px; width: 100%; margin-bottom: 20px; border-radius: 15px; overflow: hidden; }
+        .badge-pending { background: #ffc107; color: black; padding: 4px 8px; border-radius: 5px; font-size: 10px; }
+        .badge-success { background: #28a745; padding: 4px 8px; border-radius: 5px; font-size: 10px; }
     </style>
 </head>
 <body>
 
-<div id="authPage" class="container d-flex align-items-center justify-content-center" style="min-height:100vh;">
+<div id="authPage" class="container align-items-center justify-content-center">
     <div class="glass p-4 w-100" style="max-width:380px;">
         <h2 class="text-center text-warning fw-bold mb-4">IRANVEST</h2>
         <div id="loginBox">
             <input type="text" id="uL" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username">
             <input type="password" id="pL" class="form-control mb-4 bg-dark text-white border-secondary" placeholder="Password">
             <button class="btn btn-gold w-100 py-3" onclick="doLogin()">SIGN IN</button>
-            <p class="text-center mt-3 small">Member baru? <a href="#" class="text-warning" onclick="toggleAuth(true)">Daftar</a></p>
+            <p class="text-center mt-3 small text-secondary">Belum punya akun? <a href="javascript:void(0)" class="text-warning text-decoration-none" onclick="toggleAuth(true)">Daftar</a></p>
         </div>
         <div id="regBox" style="display:none;">
             <input type="text" id="uR" class="form-control mb-3 bg-dark text-white border-secondary" placeholder="Username Baru">
             <input type="password" id="pR" class="form-control mb-4 bg-dark text-white border-secondary" placeholder="Password Baru">
-            <button class="btn btn-gold w-100 py-3" onclick="doReg()">CREATE ACCOUNT</button>
-            <p class="text-center mt-3 small"><a href="#" class="text-warning" onclick="toggleAuth(false)">Back to Login</a></p>
+            <button class="btn btn-gold w-100 py-3" onclick="doReg()">DAFTAR SEKARANG</button>
+            <p class="text-center mt-3 small"><a href="javascript:void(0)" class="text-warning text-decoration-none" onclick="toggleAuth(false)">Kembali Login</a></p>
         </div>
     </div>
 </div>
 
-<div id="mainApp" style="display:none;">
-    
+<div id="mainApp">
     <section id="sec-home" class="active-sec">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between mb-4">
             <h5 class="fw-bold text-warning m-0">DANIEL TECH</h5>
-            <i class="fas fa-bell text-secondary"></i>
+            <span class="badge bg-dark border border-secondary" id="displayUser">Investor</span>
         </div>
-
         <div id="chart-container" class="glass"></div>
-
         <div class="glass p-3 text-center mb-4">
-            <p class="text-secondary small mb-1">TOTAL BALANCE</p>
+            <p class="text-secondary small mb-1">SALDO AKTIF</p>
             <h2 class="fw-bold" id="labelSaldo">Rp 0</h2>
         </div>
-
-        <h6 class="fw-bold mb-3">INVESTMENT PLANS</h6>
-        
-        <div id="listProduk">
-            <div class="prod-card">
-                <img src="https://images.unsplash.com/photo-1611974714658-66d2f13c9ad8?q=80&w=500" class="prod-img">
-                <div class="p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold m-0 text-warning">Gold Mining Beta</h6>
-                            <small class="text-secondary">Profit 4% Daily (30 Days)</small>
-                        </div>
-                        <button class="btn btn-gold btn-sm px-3" onclick="buy(10000)">Rp 10k</button>
-                    </div>
-                </div>
+        <h6 class="fw-bold mb-3">LIST PRODUK</h6>
+        <div class="prod-card">
+            <img src="https://images.unsplash.com/photo-1611974714658-66d2f13c9ad8?q=80&w=500" class="prod-img">
+            <div class="p-3 d-flex justify-content-between align-items-center">
+                <div><h6 class="fw-bold m-0 text-warning">Gold Mining</h6><small class="text-secondary">Profit 5%/Day</small></div>
+                <button class="btn btn-gold btn-sm px-3" onclick="buy(10000)">10k</button>
             </div>
-            <div class="prod-card">
-                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=500" class="prod-img">
-                <div class="p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold m-0 text-warning">Crypto Staking V2</h6>
-                            <small class="text-secondary">Profit 7% Daily (45 Days)</small>
-                        </div>
-                        <button class="btn btn-gold btn-sm px-3" onclick="buy(100000)">Rp 100k</button>
-                    </div>
-                </div>
-            </div>
-            <div class="prod-card">
-                <img src="https://images.unsplash.com/photo-1621504450181-55e89ff50d50?q=80&w=500" class="prod-img">
-                <div class="p-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold m-0 text-warning">Oil Empire VIP</h6>
-                            <small class="text-secondary">Profit 12% Daily (Forever)</small>
-                        </div>
-                        <button class="btn btn-gold btn-sm px-3" onclick="buy(1000000)">Rp 1JT</button>
-                    </div>
-                </div>
+        </div>
+        <div class="prod-card">
+            <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=500" class="prod-img">
+            <div class="p-3 d-flex justify-content-between align-items-center">
+                <div><h6 class="fw-bold m-0 text-warning">Crypto VIP</h6><small class="text-secondary">Profit 10%/Day</small></div>
+                <button class="btn btn-gold btn-sm px-3" onclick="buy(50000)">50k</button>
             </div>
         </div>
     </section>
@@ -116,9 +89,8 @@
     <section id="sec-depo">
         <h5 class="fw-bold mb-4">Deposit Saldo</h5>
         <div class="glass p-3 mb-4">
-            <label class="small text-secondary mb-2">Input Nominal Bebas (Min 10rb)</label>
-            <input type="number" id="customDepo" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Masukkan Jumlah...">
-            <button class="btn btn-gold w-100 py-3" onclick="doDepo()">ISI SALDO</button>
+            <input type="number" id="customDepo" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Minimal 10.000">
+            <button class="btn btn-gold w-100 py-3" onclick="doDepo()">PROSES DEPOSIT</button>
         </div>
         <h6 class="fw-bold mb-3 small text-secondary">HISTORY DEPOSIT</h6>
         <div id="histDepo"></div>
@@ -127,40 +99,34 @@
     <section id="sec-wd">
         <h5 class="fw-bold mb-4">Penarikan Dana</h5>
         <div class="glass p-3 mb-4">
-            <label class="small text-secondary mb-2">Nominal (Min 50rb)</label>
-            <input type="number" id="customWD" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Contoh: 50000">
-            <input type="text" id="targetWD" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Nomor DANA / Rekening">
-            <button class="btn btn-gold w-100 py-3" onclick="doWD()">TARIK SEKARANG</button>
+            <input type="number" id="customWD" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Nominal WD">
+            <input type="text" id="targetWD" class="form-control bg-dark text-white border-0 py-3 mb-3" placeholder="Nomor DANA">
+            <button class="btn btn-gold w-100 py-3" onclick="doWD()">PROSES WD</button>
         </div>
-        <h6 class="fw-bold mb-3 small text-secondary">HISTORY PENARIKAN</h6>
+        <h6 class="fw-bold mb-3 small text-secondary">HISTORY WD</h6>
         <div id="histWD"></div>
     </section>
 
     <section id="sec-prof">
         <div class="text-center mb-4">
-            <div class="bg-warning mx-auto rounded-circle d-flex align-items-center justify-content-center mb-2" style="width:70px; height:70px;">
-                <i class="fas fa-user-tie fa-2x text-dark"></i>
+            <div class="bg-warning mx-auto rounded-circle d-flex align-items-center justify-content-center mb-3" style="width:70px; height:70px;">
+                <i class="fas fa-user-circle fa-3x text-dark"></i>
             </div>
-            <h5 class="fw-bold mb-0" id="profName">Daniel User</h5>
-            <small class="text-secondary">Verified Investor</small>
+            <h5 class="fw-bold mb-0" id="profName">Daniel</h5>
+            <small class="text-secondary">Investor Level 1</small>
         </div>
-        
-        <div class="glass p-3 mb-3 d-flex justify-content-between align-items-center">
-            <span><i class="fas fa-shield-alt text-warning me-3"></i>Keamanan Akun</span>
+        <div class="glass p-3 mb-3 d-flex justify-content-between align-items-center" onclick="alert('DANA: 085714438874')">
+            <span><i class="fas fa-headset text-warning me-3"></i>Bantuan Admin</span>
             <i class="fas fa-chevron-right text-secondary"></i>
         </div>
-        <div class="glass p-3 mb-3 d-flex justify-content-between align-items-center" onclick="alert('Admin: 085714438874')">
-            <span><i class="fas fa-headset text-warning me-3"></i>Hubungi Admin</span>
-            <i class="fas fa-chevron-right text-secondary"></i>
-        </div>
-        <button class="btn btn-outline-danger w-100 mt-4 border-0" onclick="logout()">LOGOUT ACCOUNT</button>
+        <button class="btn btn-outline-danger w-100 mt-4" onclick="logout()">LOGOUT</button>
     </section>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="nav('sec-home', this)"><i class="fas fa-chart-pie fa-lg"></i><br>Beranda</div>
-        <div class="nav-item" onclick="nav('sec-depo', this)"><i class="fas fa-wallet fa-lg"></i><br>Deposit</div>
-        <div class="nav-item" onclick="nav('sec-wd', this)"><i class="fas fa-money-bill-wave fa-lg"></i><br>Withdraw</div>
-        <div class="nav-item" onclick="nav('sec-prof', this)"><i class="fas fa-user-circle fa-lg"></i><br>Profile</div>
+        <div class="nav-item active" onclick="nav('sec-home', this)"><i class="fas fa-home fa-lg"></i><br>HOME</div>
+        <div class="nav-item" onclick="nav('sec-depo', this)"><i class="fas fa-wallet fa-lg"></i><br>DEPO</div>
+        <div class="nav-item" onclick="nav('sec-wd', this)"><i class="fas fa-money-bill fa-lg"></i><br>WD</div>
+        <div class="nav-item" onclick="nav('sec-prof', this)"><i class="fas fa-user fa-lg"></i><br>PROFILE</div>
     </div>
 </div>
 
@@ -182,18 +148,23 @@
     const db = firebase.database();
     const session = localStorage.getItem("uSess");
 
-    // INIT UI
+    // LOGIKA FILTERING HALAMAN (PASTI BERHASIL)
     window.onload = () => {
+        const auth = document.getElementById('authPage');
+        const app = document.getElementById('mainApp');
+
         if(session) {
-            document.getElementById('authPage').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
+            auth.style.setProperty('display', 'none', 'important');
+            app.style.setProperty('display', 'block', 'important');
+            document.getElementById('displayUser').innerText = session;
             document.getElementById('profName').innerText = session;
             startSync();
             initChart();
         } else {
-            document.getElementById('authPage').style.display = 'flex';
+            auth.style.setProperty('display', 'flex', 'important');
+            app.style.setProperty('display', 'none', 'important');
         }
-    }
+    };
 
     function toggleAuth(r) {
         document.getElementById('loginBox').style.display = r ? 'none' : 'block';
@@ -207,39 +178,19 @@
         el.classList.add('active');
     }
 
-    // LIVE CHART
-    function initChart() {
-        const chart = LightweightCharts.createChart(document.getElementById('chart-container'), {
-            layout: { backgroundColor: '#01080e', textColor: '#888' },
-            grid: { vertLines: { visible: false }, horzLines: { color: '#111' } },
-            timeScale: { visible: false }
-        });
-        const lineSeries = chart.addLineSeries({ color: '#ffcc00' });
-        lineSeries.setData([
-            { time: '2023-01-01', value: 30 }, { time: '2023-01-02', value: 35 },
-            { time: '2023-01-03', value: 42 }, { time: '2023-01-04', value: 38 },
-            { time: '2023-01-05', value: 50 }, { time: '2023-01-06', value: 55 }
-        ]);
-    }
-
-    // FIREBASE SYNC
     function startSync() {
         db.ref('users/'+session+'/saldo').on('value', s => {
             document.getElementById('labelSaldo').innerText = "Rp " + (s.val() || 0).toLocaleString();
         });
-
-        // History Sync
         db.ref('transactions/'+session).on('value', s => {
             const hDepo = document.getElementById('histDepo');
             const hWD = document.getElementById('histWD');
             hDepo.innerHTML = ""; hWD.innerHTML = "";
-            
             s.forEach(t => {
                 const d = t.val();
-                const html = `
-                <div class="glass p-2 mb-2 d-flex justify-content-between align-items-center small">
+                const html = `<div class="glass p-2 mb-2 d-flex justify-content-between small">
                     <span>Rp ${parseInt(d.amount).toLocaleString()}</span>
-                    <span class="badge ${d.status === 'PENDING' ? 'badge-pending' : 'badge-success'}">${d.status}</span>
+                    <span class="${d.status==='PENDING'?'badge-pending':'badge-success'}">${d.status}</span>
                 </div>`;
                 if(d.type === "DEPO") hDepo.innerHTML = html + hDepo.innerHTML;
                 else hWD.innerHTML = html + hWD.innerHTML;
@@ -247,7 +198,6 @@
         });
     }
 
-    // ACTIONS
     function doLogin() {
         const u = document.getElementById('uL').value;
         const p = document.getElementById('pL').value;
@@ -255,36 +205,43 @@
             if(s.exists() && s.val().password === p) {
                 localStorage.setItem("uSess", u);
                 location.reload();
-            } else alert("Username/Password Salah!");
+            } else alert("Salah!");
         });
     }
 
     function doReg() {
         const u = document.getElementById('uR').value;
         const p = document.getElementById('pR').value;
-        if(u && p) {
-            db.ref('users/'+u).set({username:u, password:p, saldo:0}).then(() => location.reload());
-        }
+        if(u && p) db.ref('users/'+u).set({username:u, password:p, saldo:0}).then(()=>location.reload());
     }
 
     function doDepo() {
         const a = document.getElementById('customDepo').value;
-        if(a < 10000) return alert("Minimal deposit 10rb");
+        if(a < 10000) return alert("Min 10rb");
         db.ref('transactions/'+session+'/T'+Date.now()).set({type:"DEPO", amount:a, status:"PENDING"})
-        .then(() => alert("Berhasil! Kirim Dana ke 085714438874"));
+        .then(()=>alert("Berhasil! Kirim ke 085714438874"));
     }
 
     function doWD() {
         const a = document.getElementById('customWD').value;
         const t = document.getElementById('targetWD').value;
-        if(a < 50000 || !t) return alert("Cek kembali nominal (Min 50rb) dan tujuan!");
+        if(a < 50000) return alert("Min 50rb");
         db.ref('transactions/'+session+'/T'+Date.now()).set({type:"WD", amount:a, target:t, status:"PROSES"})
-        .then(() => alert("WD sedang diproses!"));
+        .then(()=>alert("Diproses!"));
     }
 
-    function buy(h) { alert("Konfirmasi pembelian paket Rp " + h.toLocaleString() + " berhasil terkirim!"); }
+    function initChart() {
+        const chart = LightweightCharts.createChart(document.getElementById('chart-container'), {
+            layout: { backgroundColor: '#01080e', textColor: '#888' },
+            grid: { vertLines: { visible: false }, horzLines: { color: '#111' } },
+            timeScale: { visible: false }
+        });
+        const lineSeries = chart.addLineSeries({ color: '#ffcc00' });
+        lineSeries.setData([{time:'2023-01-01',value:30},{time:'2023-01-02',value:45},{time:'2023-01-03',value:40},{time:'2023-01-04',value:60}]);
+    }
+
+    function buy(h) { alert("Paket Rp " + h.toLocaleString() + " dalam proses!"); }
     function logout() { localStorage.clear(); location.reload(); }
 </script>
 </body>
-                                                                  </html>
-    
+</html>
