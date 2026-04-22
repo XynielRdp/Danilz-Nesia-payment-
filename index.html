@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>IRANVEST TITAN V8 | Daniel Tech</title>
+    <title>IRANVEST TITAN V8.2 | Daniel Tech</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,19 +20,17 @@
         body { 
             background: var(--dark-bg); color: #e0e0e0; font-family: 'Rajdhani', sans-serif; 
             margin: 0; padding: 0; overflow-x: hidden;
-            background-image: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000'); /* Cyber Background */
+            background-image: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=1000');
             background-size: cover; background-attachment: fixed;
         }
 
         .overlay-dark { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: -1; }
-
         .glass { background: var(--card-bg); border: 1px solid var(--neon-blue); backdrop-filter: blur(10px); box-shadow: 0 0 15px rgba(0, 243, 255, 0.2); }
         .btn-cyber { background: transparent; border: 1px solid var(--neon-blue); color: var(--neon-blue); font-family: 'Orbitron'; font-size: 11px; clip-path: polygon(5% 0, 100% 0, 95% 100%, 0 100%); }
         
-        /* Auth UI */
-        #authPage { height: 100vh; display: flex; align-items: center; justify-content: center; background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000') center/cover; }
-        
-        /* Navigation */
+        #authPage { height: 100vh; display: none; align-items: center; justify-content: center; background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000') center/cover; }
+        #mainApp { display: none; }
+
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; padding: 15px 0; border-top: 2px solid var(--neon-pink); z-index: 9999; }
         .nav-item { color: #555; font-size: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
         .nav-item.active { color: var(--neon-blue); transform: translateY(-5px); }
@@ -41,19 +39,16 @@
         .active-sec { display: block !important; }
         @keyframes slideIn { from { transform: translateX(50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-        /* Stock Cards */
         .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .stock-card { background: rgba(0,0,0,0.8); border: 1px solid #333; padding: 10px; border-radius: 5px; position: relative; overflow: hidden; }
         .stock-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 3px; }
 
-        /* Live Chat */
         #chatWindow { position: fixed; bottom: 90px; right: 15px; width: 300px; height: 400px; display: none; flex-direction: column; z-index: 10000; }
         #chatMessages { flex: 1; overflow-y: auto; padding: 10px; background: #050505; }
         .chat-bubble { margin-bottom: 10px; padding: 8px; border-radius: 5px; max-width: 85%; font-size: 13px; }
         .chat-me { background: var(--neon-blue); color: #000; align-self: flex-end; margin-left: auto; }
         .chat-bot { background: #222; color: #fff; }
 
-        /* Admin */
         #adminPanel { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 20000; overflow-y: auto; padding: 20px; }
     </style>
 </head>
@@ -84,34 +79,31 @@
             <input type="text" id="uL" class="form-control mb-3 bg-transparent text-white border-info" placeholder="ID_USER">
             <input type="password" id="pL" class="form-control mb-4 bg-transparent text-white border-info" placeholder="ID_ACCESS">
             <button class="btn btn-info w-100 py-2 fw-bold" onclick="doLogin()">AUTHORIZE</button>
-            <p class="text-center mt-3 small">NO_NODE? <span class="text-info" onclick="toggleAuth(true)">REGISTER</span></p>
+            <p class="text-center mt-3 small">NO_NODE? <span class="text-info" onclick="toggleAuth(true)" style="cursor:pointer">REGISTER</span></p>
         </div>
         <div id="regForm" style="display:none;">
             <input type="text" id="uR" class="form-control mb-3 bg-transparent text-white border-info" placeholder="NEW_ID">
             <input type="password" id="pR" class="form-control mb-4 bg-transparent text-white border-info" placeholder="NEW_ACCESS">
             <button class="btn btn-info w-100 py-2 fw-bold" onclick="doReg()">INITIALIZE</button>
-            <p class="text-center mt-3 small"><span class="text-info" onclick="toggleAuth(false)">BACK</span></p>
+            <p class="text-center mt-3 small"><span class="text-info" onclick="toggleAuth(false)" style="cursor:pointer">BACK_TO_LOGIN</span></p>
         </div>
     </div>
 </div>
 
-<div id="mainApp" style="display:none;">
+<div id="mainApp">
     <section id="sec-home" class="active-sec">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="text-info m-0">LIVE_MARKET</h5>
             <h5 class="text-warning m-0" id="labelSaldo">Rp 0</h5>
         </div>
         <div id="tradingChart" class="glass mb-4" style="height:200px;"></div>
-        
         <h6 class="text-info mb-3">60_AVAILABLE_STOCKS</h6>
         <div class="stock-grid" id="stockContainer"></div>
     </section>
 
     <section id="sec-mission">
         <h5 class="text-info mb-4">ACTIVE_CONTRACTS</h5>
-        <div id="activeList">
-            <p class="text-center text-secondary">No active contracts.</p>
-        </div>
+        <div id="activeList"><p class="text-center text-secondary">No active contracts.</p></div>
     </section>
 
     <section id="sec-wallet">
@@ -128,7 +120,6 @@
                 <button class="btn btn-info w-100 btn-sm" onclick="submitDepo()">SUBMIT PROOF</button>
             </div>
         </div>
-        
         <h6 class="text-info mb-3">WITHDRAW_FUNDS</h6>
         <div class="glass p-3">
             <input type="number" id="wdAmt" class="form-control mb-2 bg-dark text-white" placeholder="Nominal WD">
@@ -139,7 +130,7 @@
     <section id="sec-prof">
         <div class="text-center mb-4">
             <img id="adminTrigger" src="https://api.dicebear.com/7.x/pixel-art/svg?seed=Daniel" class="rounded-circle border border-info" style="width:80px;" onclick="checkAdmin()">
-            <h5 class="text-info mt-2" id="profName">DANIEL</h5>
+            <h5 class="text-info mt-2" id="profName">...</h5>
         </div>
         <div class="glass p-3 mb-2">
             <label class="small">LINK_BANK / E-WALLET</label>
@@ -166,8 +157,7 @@
 </div>
 
 <div id="adminPanel">
-    <h3 class="text-warning">TITAN_ADMIN_V8</h3>
-    <hr class="border-secondary">
+    <h3 class="text-warning">TITAN_ADMIN_V8.2</h3>
     <div id="adminList"></div>
     <button class="btn btn-outline-info w-100 mt-4" onclick="closeAdmin()">BACK TO APP</button>
 </div>
@@ -187,45 +177,73 @@
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    // -- LOGIN / SESSION LOGIC --
     const session = localStorage.getItem("uSess");
 
-    // 60 STOCKS GENERATOR
+    window.onload = () => {
+        if (session && session !== "undefined") {
+            db.ref('users/' + session).once('value', s => {
+                if(s.exists()) {
+                    startApp();
+                } else {
+                    localStorage.clear();
+                    showAuth();
+                }
+            });
+        } else {
+            showAuth();
+        }
+    };
+
+    function showAuth() {
+        document.getElementById('authPage').style.display = 'flex';
+        document.getElementById('mainApp').style.display = 'none';
+    }
+
+    function startApp() {
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('profName').innerText = session;
+        renderStocks(); syncData(); initChart();
+        document.body.addEventListener('click', () => { document.getElementById('bgMusic').play(); }, {once:true});
+    }
+
+    function doLogin() {
+        const u = document.getElementById('uL').value.trim();
+        const p = document.getElementById('pL').value.trim();
+        if(!u || !p) return alert("Isi Data!");
+        db.ref('users/' + u).once('value', s => {
+            if(s.exists() && s.val().password === p) {
+                localStorage.setItem("uSess", u);
+                location.reload();
+            } else alert("AKSES DITOLAK");
+        });
+    }
+
+    function doReg() {
+        const u = document.getElementById('uR').value.trim();
+        const p = document.getElementById('pR').value.trim();
+        if(!u || !p) return alert("Isi Data!");
+        db.ref('users/' + u).once('value', s => {
+            if(s.exists()) alert("ID SUDAH ADA");
+            else {
+                db.ref('users/' + u).set({password:p, saldo:0}).then(() => {
+                    localStorage.setItem("uSess", u);
+                    location.reload();
+                });
+            }
+        });
+    }
+
+    // -- 60 STOCKS LOGIC --
     const stocks = [];
     for(let i=1; i<=60; i++) {
         stocks.push({
-            id: i,
-            name: `TITAN_CORE_V${i}`,
-            price: 10000 * i,
-            daily: 2000 + (i * 100),
-            contract: 30, // 30 hari
-            img: `https://picsum.photos/seed/cyber${i}/200/120`
+            id: i, name: `TITAN_V${i}`, price: 10000*i, daily: 2000+(i*100), 
+            contract: 30, img: `https://picsum.photos/seed/cyber${i}/200/120`
         });
     }
-
-    // TRADING LOGIC (REKAYASA PASAR)
-    let chart; let lineSeries;
-    function initChart() {
-        chart = LightweightCharts.createChart(document.getElementById('tradingChart'), {
-            layout: { backgroundColor: 'transparent', textColor: '#00f3ff' },
-            grid: { vertLines: { color: '#111' }, horzLines: { color: '#111' } },
-        });
-        lineSeries = chart.addLineSeries({ color: '#00f3ff', lineWidth: 2 });
-        let base = 100;
-        setInterval(() => {
-            base += (Math.random() - 0.48) * 5; // Sedikit lebih condong naik
-            lineSeries.update({ time: Date.now() / 1000, value: base });
-        }, 2000);
-    }
-
-    window.onload = () => {
-        if(session) {
-            document.getElementById('authPage').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            document.getElementById('profName').innerText = session;
-            renderStocks(); syncData(); initChart();
-            document.getElementById('bgMusic').play().catch(() => console.log("Music click needed"));
-        }
-    };
 
     function renderStocks() {
         const cont = document.getElementById('stockContainer');
@@ -241,21 +259,31 @@
 
     function buyStock(id) {
         const s = stocks.find(x => x.id === id);
-        if(confirm(`Mulai kontrak ${s.name}?\nSyarat: Misi 3x Sehari\nKontrak: ${s.contract} Hari`)) {
-            db.ref('users/'+session+'/saldo').once('value', val => {
-                if((val.val() || 0) >= s.price) {
-                    db.ref('users/'+session).update({saldo: val.val() - s.price});
-                    db.ref('users/'+session+'/contracts/C'+Date.now()).set({
-                        name: s.name, daily: s.daily, missions_today: 0, 
-                        last_mission: 0, days_left: s.contract
-                    });
-                    alert("KONTRAK DIMULAI!");
-                } else alert("SALDO KURANG!");
-            });
-        }
+        db.ref('users/'+session+'/saldo').once('value', val => {
+            if((val.val() || 0) >= s.price) {
+                db.ref('users/'+session).update({saldo: val.val() - s.price});
+                db.ref('users/'+session+'/contracts/C'+Date.now()).set({
+                    name: s.name, daily: s.daily, missions_today: 0, days_left: s.contract
+                });
+                alert("KONTRAK DIMULAI!");
+            } else alert("SALDO KURANG");
+        });
     }
 
-    // MISSION SYSTEM (3x Sehari)
+    // -- MISSION & CHART LOGIC --
+    function initChart() {
+        const chart = LightweightCharts.createChart(document.getElementById('tradingChart'), {
+            layout: { backgroundColor: 'transparent', textColor: '#00f3ff' },
+            grid: { vertLines: { color: '#111' }, horzLines: { color: '#111' } },
+        });
+        const lineSeries = chart.addLineSeries({ color: '#00f3ff' });
+        let base = 100;
+        setInterval(() => {
+            base += (Math.random() - 0.48) * 5;
+            lineSeries.update({ time: Date.now() / 1000, value: base });
+        }, 2000);
+    }
+
     function syncData() {
         db.ref('users/'+session+'/saldo').on('value', s => {
             document.getElementById('labelSaldo').innerText = "Rp " + (s.val() || 0).toLocaleString();
@@ -266,19 +294,12 @@
             list.innerHTML = "";
             s.forEach(c => {
                 const d = c.val();
-                list.innerHTML += `
-                    <div class="glass p-3 mb-2">
-                        <div class="d-flex justify-content-between">
-                            <b>${d.name}</b> <small class="text-info">${d.days_left} Hari Lagi</small>
-                        </div>
-                        <div class="progress bg-dark my-2" style="height:5px;">
-                            <div class="progress-bar bg-info" style="width:${(d.missions_today/3)*100}%"></div>
-                        </div>
-                        <button class="btn btn-cyber btn-sm" onclick="doMission('${c.key}')" ${d.missions_today >= 3 ? 'disabled' : ''}>
-                            KERJAKAN MISI (${d.missions_today}/3)
-                        </button>
-                    </div>
-                `;
+                list.innerHTML += `<div class="glass p-3 mb-2">
+                    <b>${d.name}</b> <small class="text-info">${d.days_left} Hari</small>
+                    <button class="btn btn-cyber btn-sm d-block mt-2" onclick="doMission('${c.key}')" ${d.missions_today >= 3 ? 'disabled' : ''}>
+                        MISI (${d.missions_today}/3)
+                    </button>
+                </div>`;
             });
         });
     }
@@ -286,116 +307,41 @@
     function doMission(cid) {
         db.ref('users/'+session+'/contracts/'+cid).once('value', s => {
             const d = s.val();
-            if(d.missions_today < 3) {
-                const nextCount = d.missions_today + 1;
-                db.ref('users/'+session+'/contracts/'+cid).update({missions_today: nextCount});
-                if(nextCount === 3) {
-                    db.ref('users/'+session+'/saldo').once('value', sv => {
-                        db.ref('users/'+session).update({saldo: sv.val() + d.daily});
-                    });
-                    alert("MISI SELESAI! Profit Harian Masuk.");
-                } else alert(`Misi ${nextCount}/3 Berhasil!`);
+            const next = d.missions_today + 1;
+            db.ref('users/'+session+'/contracts/'+cid).update({missions_today: next});
+            if(next === 3) {
+                db.ref('users/'+session+'/saldo').once('value', sv => {
+                    db.ref('users/'+session).update({saldo: sv.val() + d.daily});
+                });
+                alert("PROFIT CAIR!");
             }
         });
     }
 
-    // LIVE CHAT
-    function toggleChat() { 
-        const c = document.getElementById('chatWindow'); 
-        c.style.display = (c.style.display === 'flex') ? 'none' : 'flex'; 
-    }
-    function sendChat() {
-        const inp = document.getElementById('chatInput');
-        if(!inp.value) return;
-        const msg = inp.value;
-        const box = document.getElementById('chatMessages');
-        box.innerHTML += `<div class="chat-bubble chat-me">${msg}</div>`;
-        inp.value = "";
-        setTimeout(() => {
-            box.innerHTML += `<div class="chat-bubble chat-bot">Pesan diterima Daniel. Admin akan segera membalas bukti transfer Anda.</div>`;
-            box.scrollTop = box.scrollHeight;
-        }, 1000);
-    }
-    function sendPhoto() {
-        const box = document.getElementById('chatMessages');
-        box.innerHTML += `<div class="chat-bubble chat-me"><i class="fas fa-image"></i> Image_Sent_001.jpg</div>`;
-        setTimeout(() => {
-            box.innerHTML += `<div class="chat-bubble chat-bot">Gambar/Bukti transfer sudah masuk sistem. Menunggu ACC admin.</div>`;
-            box.scrollTop = box.scrollHeight;
-        }, 1000);
-    }
-
-    // DEPO & WD
-    function openDepo(type) {
-        document.getElementById('depoBox').style.display = 'block';
-        document.getElementById('depoGuide').innerText = type === 'DANA' ? 'Transfer DANA: 085714438874' : 'Scan QRIS Admin di Live Chat';
-    }
-    function submitDepo() {
-        const amt = document.getElementById('depoAmt').value;
-        if(!amt) return;
-        db.ref('transactions/pending/T'+Date.now()).set({uid: session, amount: amt, type: 'DEPO'})
-        .then(() => alert("DEPOSIT PENDING! MENUNGGU ACC ADMIN"));
-    }
-    function doWD() {
-        const amt = document.getElementById('wdAmt').value;
-        db.ref('users/'+session+'/bank').once('value', b => {
-            if(!b.exists()) return alert("Tautkan Bank di Profil dulu!");
-            db.ref('transactions/pending/T'+Date.now()).set({uid: session, amount: amt, type: 'WD', target: b.val()})
-            .then(() => alert("WD DIPROSES!"));
-        });
-    }
-
-    // ADMIN LOGIC (5x Click Foto)
-    let adminHits = 0;
-    function checkAdmin() {
-        adminHits++;
-        if(adminHits >= 5) {
-            document.getElementById('adminPanel').style.display = 'block';
-            loadAdmin();
-        }
-    }
-    function loadAdmin() {
-        db.ref('transactions/pending').on('value', s => {
-            const list = document.getElementById('adminList');
-            list.innerHTML = "";
-            s.forEach(t => {
-                const d = t.val();
-                list.innerHTML += `
-                    <div class="glass p-3 mb-2">
-                        <small>${d.uid} | ${d.type} | Rp${d.amount}</small><br>
-                        <button class="btn btn-success btn-sm me-2" onclick="acc('${t.key}', '${d.uid}', '${d.type}', ${d.amount})">ACC</button>
-                        <button class="btn btn-danger btn-sm" onclick="reject('${t.key}')">TOLAK</button>
-                    </div>
-                `;
-            });
-        });
-    }
-    function acc(tid, uid, type, amt) {
-        if(type === 'DEPO') {
-            db.ref('users/'+uid+'/saldo').once('value', s => {
-                db.ref('users/'+uid).update({saldo: (s.val() || 0) + parseInt(amt)});
-            });
-        }
-        db.ref('transactions/pending/'+tid).remove();
-        alert("TRANSAKSI BERHASIL DI ACC!");
-    }
-    function reject(tid) { db.ref('transactions/pending/'+tid).remove(); }
-
-    function saveBank() {
-        const b = document.getElementById('userBank').value;
-        const r = document.getElementById('userRek').value;
-        db.ref('users/'+session+'/bank').set({bank: b, rek: r}).then(() => alert("BANK TERTAUT!"));
-    }
+    // -- UI HELPERS --
     function nav(id, el) {
         document.querySelectorAll('section').forEach(s => s.classList.remove('active-sec'));
         document.getElementById(id).classList.add('active-sec');
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
     }
-    function doLogin() {
-        const u = document.getElementById('uL').value;
-        const p = document.getElementById('pL').value;
-        db.ref('users/'+u).once('value', s => {
-            if(s.exists() && s.val().password === p) { localStorage.setItem("uSess", u); location.reload(); }
-            else alert("ID SALAH");
- 
+    function toggleAuth(r) {
+        document.getElementById('loginForm').style.display = r?'none':'block';
+        document.getElementById('regForm').style.display = r?'block':'none';
+    }
+    function toggleChat() { 
+        const c = document.getElementById('chatWindow');
+        c.style.display = (c.style.display === 'flex')?'none':'flex'; 
+    }
+    function logout() { localStorage.clear(); location.reload(); }
+
+    // -- ADMIN LOGIC --
+    let adminHits = 0;
+    function checkAdmin() {
+        adminHits++;
+        if(adminHits >= 5) document.getElementById('adminPanel').style.display = 'block';
+    }
+    function closeAdmin() { document.getElementById('adminPanel').style.display = 'none'; adminHits = 0; }
+</script>
+</body>
+</html>
