@@ -2,156 +2,176 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DANIEL NESIA | JASTEB OFFICIAL</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAHARAJA V36.0 | ULTRA PRO</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        :root { --primary: #0ea5e9; --secondary: #1e293b; --bg-dark: #0f172a; }
-        body { background-color: var(--bg-dark); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; margin:0; padding-bottom: 80px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; padding-bottom: 90px; }
+        .card-custom { background: #1e293b; border-radius: 18px; padding: 18px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .page { display: none; }
+        .active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        #globalInfo { display: none; background: linear-gradient(90deg, #0ea5e9, #6366f1); color: white; padding: 10px; font-size: 12px; font-weight: 700; text-align: center; }
-
-        .card-pro { background: var(--secondary); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .balance-card { background: linear-gradient(135deg, #0ea5e9, #6366f1); border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+        .form-control { background: #0f172a; color: white; border: 1px solid #334155; border-radius: 12px; padding: 12px; }
+        .form-control:focus { background: #0f172a; color: white; box-shadow: none; border-color: #0ea5e9; }
         
-        .page { display: none !important; }
-        .page.active { display: block !important; }
-        #authScreen.active { display: flex !important; align-items: center; justify-content: center; min-height: 100vh; }
+        #globalInfo { background: linear-gradient(90deg, #f59e0b, #ea580c); color: white; padding: 12px; font-weight: 800; text-align: center; display: none; position: sticky; top: 0; z-index: 1000; }
         
-        .price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .price-item { background: rgba(15, 23, 42, 0.5); border: 2px solid transparent; border-radius: 15px; padding: 15px; cursor: pointer; text-align: center; }
-        .price-item.active { border-color: var(--primary); background: rgba(14, 165, 233, 0.15); }
+        .method-card { background: rgba(255,255,255,0.03); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
+        .icon-dana { color: #008ced; }
+        .icon-gopay { color: #00aade; }
         
-        /* CHAT SYSTEM */
-        .chat-box { height: 200px; overflow-y: auto; background: rgba(0,0,0,0.3); border-radius: 12px; padding: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
-        .chat-msg { margin-bottom: 8px; font-size: 12.5px; padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.05); line-height: 1.4; }
-        .chat-msg b { color: var(--primary); }
-        .chat-admin { border-left: 3px solid #f59e0b; background: rgba(245, 158, 11, 0.1) !important; }
-        .chat-admin b { color: #f59e0b !important; }
-
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(30, 41, 59, 0.95); padding: 15px 20px; display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.1); z-index: 1000; }
-        .form-control-pro { background: rgba(15, 23, 42, 0.8) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; padding: 10px !important; border-radius: 10px !important; }
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px); padding: 18px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        
+        .btn-action { border-radius: 10px; font-weight: bold; transition: 0.2s; }
+        .status-badge { font-size: 11px; padding: 4px 8px; border-radius: 8px; font-weight: bold; }
+        .bg-pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+        .bg-success { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .bg-rejected { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
     </style>
 </head>
 <body>
 
-<div id="globalInfo"><i class="fas fa-bullhorn"></i> <span id="infoTxt">Memuat info...</span></div>
+<div id="globalInfo"><i class="fas fa-bullhorn me-2"></i> <span id="infoTxt"></span></div>
 
-<div id="authScreen" class="page active">
-    <div class="card-pro w-100" style="max-width: 400px; margin: 20px;">
-        <h3 class="fw-800 text-info text-center mb-4">MAHARAJA</h3>
+<div id="authPage" class="page active container mt-5">
+    <div class="card-custom text-center mx-auto" style="max-width: 400px;">
+        <i class="fas fa-crown text-info fa-3x mb-3"></i>
+        <h2 class="fw-800 text-info">MAHARAJA</h2>
         <div id="loginBox">
-            <input type="text" id="uL" class="form-control-pro w-100 mb-2" placeholder="Username">
-            <input type="password" id="pL" class="form-control-pro w-100 mb-3" placeholder="Password">
-            <button class="btn btn-primary w-100 p-3 fw-bold" onclick="auth('login')">MASUK</button>
-            <p class="text-center mt-3 small">Baru? <a href="#" onclick="toggleAuth(true)" class="text-info">Daftar</a></p>
+            <input type="text" id="uL" class="form-control mb-2" placeholder="Username">
+            <input type="password" id="pL" class="form-control mb-3" placeholder="Password">
+            <button class="btn btn-primary w-100 btn-action py-3" onclick="auth('login')">MASUK KE PANEL</button>
+            <p class="mt-4 small opacity-50">Belum punya akun? <a href="#" onclick="toggleAuth(true)" class="text-info text-decoration-none fw-bold">Daftar</a></p>
         </div>
         <div id="regBox" style="display:none">
-            <input type="text" id="uR" class="form-control-pro w-100 mb-2" placeholder="Username Baru">
-            <input type="password" id="pR" class="form-control-pro w-100 mb-2" placeholder="Password Baru">
-            <input type="text" id="keyR" class="form-control-pro w-100 mb-3" placeholder="Registration Key">
-            <button class="btn btn-info w-100 p-3 fw-bold text-white" onclick="auth('reg')">DAFTAR</button>
-            <p class="text-center mt-3 small"><a href="#" onclick="toggleAuth(false)" class="text-info">Kembali</a></p>
+            <input type="text" id="uR" class="form-control mb-2" placeholder="Username Baru">
+            <input type="password" id="pR" class="form-control mb-2" placeholder="Password Baru">
+            <input type="text" id="keyR" class="form-control mb-3" placeholder="Registration Key (nesia)">
+            <button class="btn btn-info w-100 btn-action py-3 text-white" onclick="auth('reg')">BUAT AKUN</button>
+            <p class="mt-4 small opacity-50"><a href="#" onclick="toggleAuth(false)" class="text-white text-decoration-none">Kembali Login</a></p>
         </div>
     </div>
 </div>
 
-<div id="homePage" class="page container px-3 py-3">
-    <nav class="d-flex justify-content-between align-items-center mb-4">
-        <span class="fw-800 text-info h4">MAHARAJA</span>
+<div id="homePage" class="page container mt-3">
+    <div class="d-flex justify-content-between mb-4 align-items-center">
+        <div>
+            <small class="opacity-50">Selamat Datang,</small>
+            <h5 class="fw-800 text-info mb-0">DANIEL NESIA</h5>
+        </div>
         <div class="d-flex gap-2">
-            <button id="adminBtn" class="btn btn-warning btn-sm fw-bold" style="display:none" onclick="showPage('adminPage')">ADMIN</button>
-            <button class="btn btn-link text-danger p-0" onclick="logout()"><i class="fas fa-sign-out-alt fa-lg"></i></button>
-        </div>
-    </nav>
-    <div class="balance-card">
-        <small class="opacity-75">Saldo Anda</small>
-        <h2 class="fw-800">Rp <span id="valBalance">0</span></h2>
-        <button class="btn btn-sm btn-light mt-1 fw-bold px-4" onclick="showPage('topupPage')">TOPUP</button>
-    </div>
-    <div class="card-pro">
-        <h6 class="fw-bold mb-3 small">TARGET EMAIL</h6>
-        <input type="email" id="targetEmail" class="form-control-pro w-100" placeholder="customer@gmail.com">
-    </div>
-    <div class="card-pro">
-        <div class="price-grid">
-            <div class="price-item" onclick="selectItem('1K', 1000, this)"><b>1K</b><br><small>Rp 1.000</small></div>
-            <div class="price-item" onclick="selectItem('5K', 5000, this)"><b>5K</b><br><small>Rp 5.000</small></div>
-            <div class="price-item" onclick="selectItem('10K', 10000, this)"><b>10K</b><br><small>Rp 10.000</small></div>
-            <div class="price-item" onclick="selectItem('Murid', 15000, this)"><b>Murid</b><br><small>Rp 15.000</small></div>
+            <button id="adminBtn" class="btn btn-warning btn-sm fw-bold rounded-pill" style="display:none" onclick="showPage('adminPage')">ADMIN</button>
+            <button class="btn btn-outline-danger btn-sm rounded-circle" onclick="logout()"><i class="fas fa-power-off"></i></button>
         </div>
     </div>
-    <div class="card-pro">
-        <h6 class="fw-bold mb-3 small">RIWAYAT</h6>
-        <div id="historyList"></div>
+
+    <div class="card-custom bg-primary text-white border-0 shadow-lg">
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <small class="fw-bold opacity-75">TOTAL SALDO</small>
+                <h2 class="fw-800 mt-1">Rp <span id="valBalance">0</span></h2>
+            </div>
+            <i class="fas fa-wallet fa-2x opacity-25"></i>
+        </div>
+        <button class="btn btn-light btn-sm fw-bold rounded-pill px-4 mt-2" onclick="showPage('topupPage')">ISI SALDO <i class="fas fa-plus-circle ms-1"></i></button>
     </div>
-    <div class="bottom-nav">
-        <b id="totalTxt" class="text-info">Rp 0</b>
-        <button class="btn btn-primary fw-bold px-5 rounded-pill" onclick="prosesOrder()">BELI</button>
+
+    <div class="card-custom">
+        <h6 class="small fw-bold mb-3"><i class="fas fa-envelope text-info me-2"></i>TARGET UNCHECK</h6>
+        <input type="email" id="targetEmail" class="form-control" placeholder="Masukkan email target...">
+    </div>
+
+    <div class="card-custom">
+        <h6 class="small fw-bold mb-3"><i class="fas fa-th-large text-info me-2"></i>PILIH LAYANAN</h6>
+        <div class="row g-2">
+            <div class="col-6"><button class="btn btn-outline-info w-100 btn-sm py-2 fw-bold" onclick="setService('Lite', 500)">LITE - 500</button></div>
+            <div class="col-6"><button class="btn btn-outline-info w-100 btn-sm py-2 fw-bold" onclick="setService('1K', 1000)">BASIC - 1K</button></div>
+            <div class="col-6"><button class="btn btn-outline-info w-100 btn-sm py-2 fw-bold" onclick="setService('5K', 5000)">PRO - 5K</button></div>
+            <div class="col-6"><button class="btn btn-outline-info w-100 btn-sm py-2 fw-bold" onclick="setService('VIP', 25000)">VIP - 25K</button></div>
+        </div>
+    </div>
+
+    <h6 class="small fw-bold opacity-50 px-2 mt-4">RIWAYAT TRANSAKSI</h6>
+    <div id="historyList"></div>
+
+    <div class="nav-bottom">
+        <div>
+            <small class="d-block opacity-50 small">Total Bayar:</small>
+            <h5 class="text-info fw-800 mb-0" id="totalTxt">Rp 0</h5>
+        </div>
+        <button class="btn btn-primary px-5 py-2 btn-action rounded-pill" onclick="order()">BELI SEKARANG</button>
     </div>
 </div>
 
-<div id="topupPage" class="page container px-3 py-3">
-    <button class="btn btn-link text-white p-0 mb-3" onclick="showPage('homePage')"><i class="fas fa-arrow-left"></i> Kembali</button>
-    <div class="card-pro text-center">
-        <h4 class="fw-800 text-info">085714438874</h4>
-        <p class="small text-warning fw-bold">KIRIM BUKTI TF DI CHAT BAWAH</p>
-    </div>
-    <div class="card-pro">
-        <input type="number" id="topupAmt" class="form-control-pro w-100 mb-2" placeholder="Nominal Transfer">
-        <button class="btn btn-info w-100 text-white fw-bold mb-3" onclick="reqT()">BUAT TIKET</button>
-        <h6 class="fw-bold small">LIVE CHAT ADMIN</h6>
-        <div id="chatBox" class="chat-box"></div>
-        <div class="input-group">
-            <input type="text" id="chatInput" class="form-control-pro" placeholder="Pesan ke admin...">
-            <button class="btn btn-primary" onclick="sendChat('user')"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-</div>
-
-<div id="adminPage" class="page container px-3 py-3">
-    <button class="btn btn-link text-white p-0 mb-3" onclick="showPage('homePage')"><i class="fas fa-arrow-left"></i> Kembali</button>
+<div id="topupPage" class="page container mt-3">
+    <button class="btn btn-sm btn-dark mb-3 rounded-pill" onclick="showPage('homePage')"><i class="fas fa-arrow-left me-1"></i> Kembali</button>
     
-    <div class="card-pro border-info mb-3">
-        <h6 class="fw-bold text-info mb-2 small">BROADCAST & REG KEY</h6>
-        <input type="text" id="adminInfoMsg" class="form-control-pro w-100 mb-2" placeholder="Isi Broadcast">
-        <input type="text" id="newRegKey" class="form-control-pro w-100 mb-2" placeholder="Registration Key">
+    <h6 class="fw-bold mb-3 px-1">PILIH METODE TRANSFER</h6>
+    
+    <div class="method-card d-flex align-items-center">
+        <i class="fas fa-wallet fa-2x icon-dana me-3"></i>
+        <div>
+            <small class="fw-bold d-block">DANA</small>
+            <b class="text-info">085714438874</b>
+            <div class="small opacity-50">A/N DANIEL NESIA</div>
+        </div>
+    </div>
+
+    <div class="method-card d-flex align-items-center">
+        <i class="fas fa-mobile-alt fa-2x icon-gopay me-3"></i>
+        <div>
+            <small class="fw-bold d-block">GOPAY</small>
+            <b class="text-info">085692069556</b>
+            <div class="small opacity-50">A/N DANIEL NESIA</div>
+        </div>
+    </div>
+
+    <div class="card-custom mt-4">
+        <h6 class="small fw-bold mb-3">KONFIRMASI DEPOSIT</h6>
+        <select id="tBank" class="form-control mb-2">
+            <option value="DANA">DANA (0857...)</option>
+            <option value="GOPAY">GOPAY (0856...)</option>
+        </select>
+        <input type="text" id="tSender" class="form-control mb-2" placeholder="Nama Pengirim">
+        <input type="number" id="tAmt" class="form-control mb-3" placeholder="Nominal Transfer">
+        <button class="btn btn-info w-100 text-white fw-bold py-3 btn-action" onclick="topup()">KIRIM BUKTI TRANSFER</button>
+    </div>
+</div>
+
+<div id="adminPage" class="page container mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-800 text-warning mb-0">ADMIN CONTROL</h5>
+        <button class="btn btn-dark btn-sm rounded-pill" onclick="showPage('homePage')">KELUAR</button>
+    </div>
+
+    <div class="card-custom border-info">
+        <h6 class="small fw-bold text-info mb-3">BROADCAST PENGUMUMAN</h6>
+        <textarea id="bcMsg" class="form-control mb-2" rows="2" placeholder="Ketik info di sini..."></textarea>
         <div class="d-flex gap-2">
-            <button class="btn btn-info btn-sm text-white flex-fill fw-bold" onclick="setInfo(true)">ON</button>
-            <button class="btn btn-secondary btn-sm flex-fill fw-bold" onclick="setInfo(false)">OFF</button>
-            <button class="btn btn-light btn-sm flex-fill fw-bold" onclick="updateRegKey()">SET KEY</button>
+            <button class="btn btn-success btn-sm flex-fill fw-bold" onclick="bc(true)">AKTIFKAN</button>
+            <button class="btn btn-danger btn-sm flex-fill fw-bold" onclick="bc(false)">MATIKAN</button>
         </div>
     </div>
 
-    <div class="card-pro border-warning mb-3">
-        <h6 class="fw-bold text-warning mb-2 small">MANAJEMEN USER</h6>
-        <input type="text" id="targetU" class="form-control-pro w-100 mb-2" placeholder="Username Target">
-        <input type="number" id="targetS" class="form-control-pro w-100 mb-2" placeholder="Set Saldo">
+    <div class="card-custom border-primary mt-3">
+        <h6 class="small fw-bold text-primary mb-3">MANAJEMEN USER</h6>
+        <input type="text" id="targetU" class="form-control mb-2" placeholder="Username Target">
+        <input type="number" id="nS" class="form-control mb-3" placeholder="Set Saldo Baru">
         <div class="d-flex gap-2">
-            <button class="btn btn-warning btn-sm flex-fill fw-bold" onclick="setS()">UPDATE SALDO</button>
-            <button class="btn btn-danger btn-sm flex-fill fw-bold" onclick="banU(true)">BAN</button>
-            <button class="btn btn-success btn-sm flex-fill fw-bold" onclick="banU(false)">UNBAN</button>
+            <button class="btn btn-primary btn-sm flex-fill fw-bold" onclick="editS()">SET SALDO</button>
+            <button class="btn btn-danger btn-sm flex-fill fw-bold" onclick="ban(true)">BAN</button>
+            <button class="btn btn-success btn-sm flex-fill fw-bold" onclick="ban(false)">UNBAN</button>
         </div>
     </div>
 
-    <div class="card-pro border-primary mb-3">
-        <h6 class="fw-bold text-primary mb-2 small">LIVE MONITOR & REPLY</h6>
-        <div id="adminChatBox" class="chat-box" style="height: 180px;"></div>
-        <div class="input-group">
-            <input type="text" id="adminChatInput" class="form-control-pro" placeholder="Balas ke user...">
-            <button class="btn btn-warning fw-bold" onclick="sendChat('admin')">BALAS</button>
-        </div>
-    </div>
+    <h6 class="mt-4 text-warning fw-bold small">DEPOSIT PENDING</h6>
+    <div id="admDepos"></div>
 
-    <h6 class="fw-bold mt-3 mb-2 small">DEPOSIT PENDING</h6>
-    <div id="adminDepoList"></div>
-
-    <h6 class="fw-bold mt-3 mb-2 small">PESANAN PENDING</h6>
-    <div id="adminOrderList"></div>
+    <h6 class="mt-4 text-info fw-bold small">ORDER UNCHECK PENDING</h6>
+    <div id="admOrders"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -160,107 +180,78 @@
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyCwrvbPBNwB0r7PSdFBqa4wS2gag-MmpDE",
-        authDomain: "my-invest-database.firebaseapp.com",
-        databaseURL: "https://my-invest-database-default-rtdb.asia-southeast1.firebasedatabase.app/",
-        projectId: "my-invest-database",
-        storageBucket: "my-invest-database.firebasestorage.app",
-        messagingSenderId: "397898231978",
-        appId: "1:397898231978:web:ecf7ff6b9682f5e0b660d3"
+        databaseURL: "https://my-invest-database-default-rtdb.asia-southeast1.firebasedatabase.app/"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    const ADMIN_USER = "admin_danil";
-    let curUser = localStorage.getItem("mhrj_user");
-    let sPrice = 0, sName = "", curBalance = 0;
+    const ADM = "admin_danil";
+    let user = localStorage.getItem("mhr_user");
+    let price = 0, item = "", balance = 0;
 
-    window.onload = () => { 
-        if(curUser) startApp(curUser); else showPage('authScreen');
-        
+    window.onload = () => {
+        if(user) startApp(user);
         db.ref('settings/globalInfo').on('value', s => {
             const d = s.val();
-            document.getElementById('globalInfo').style.display = (d && d.active) ? 'block' : 'none';
-            if(d) document.getElementById('infoTxt').innerText = d.msg;
-        });
-
-        // Chat Listener (Real-time)
-        db.ref('live_chats').limitToLast(25).on('value', s => {
-            let h = "";
-            s.forEach(d => {
-                const v = d.val();
-                const isAdmin = v.type === 'admin';
-                h += `<div class="chat-msg ${isAdmin?'chat-admin':''}">
-                        <b>${isAdmin?'[ADMIN]':v.user}:</b> ${v.msg}
-                      </div>`;
-            });
-            [document.getElementById('chatBox'), document.getElementById('adminChatBox')].forEach(b => { 
-                if(b) { b.innerHTML = h; b.scrollTop = b.scrollHeight; }
-            });
+            if(d && d.active) { document.getElementById('globalInfo').style.display = 'block'; document.getElementById('infoTxt').innerText = d.msg; }
+            else { document.getElementById('globalInfo').style.display = 'none'; }
         });
     };
-
-    function sendChat(role) {
-        const inputId = role === 'admin' ? 'adminChatInput' : 'chatInput';
-        const m = document.getElementById(inputId).value.trim();
-        if(!m) return;
-        db.ref('live_chats').push({
-            user: curUser,
-            msg: m,
-            type: role,
-            time: Date.now()
-        });
-        document.getElementById(inputId).value = "";
-    }
 
     function auth(t) {
         const u = document.getElementById(t==='login'?'uL':'uR').value.trim().toLowerCase();
         const p = document.getElementById(t==='login'?'pL':'pR').value.trim();
         if(t==='login') {
-            db.ref('users/'+u).once('value', s => {
-                if(s.exists() && s.val().pass === p) {
-                    if(s.val().isBanned) return alert("AKUN DIBAN!");
-                    localStorage.setItem("mhrj_user", u); startApp(u);
-                } else alert("Gagal!");
+            db.ref('users/'+u).once('value').then(s => {
+                if(s.exists() && s.val().pass == p) {
+                    if(s.val().isBanned) return alert("Akun Anda DIBLOKIR!");
+                    localStorage.setItem("mhr_user", u); location.reload();
+                } else alert("Username/Password Salah!");
             });
         } else {
             const k = document.getElementById('keyR').value;
-            db.ref('settings/regKey').once('value', sk => {
-                if(k !== sk.val()) return alert("Key Salah!");
-                db.ref('users/'+u).set({pass:p, balance:0, isBanned:false}).then(() => location.reload());
+            db.ref('settings/regKey').once('value').then(sk => {
+                if(k !== (sk.val()||'nesia')) return alert("Registration Key Salah!");
+                db.ref('users/'+u).set({pass:p, balance:0, isBanned:false}).then(() => { alert("Pendaftaran Berhasil!"); toggleAuth(false); });
             });
         }
     }
 
     function startApp(u) {
-        curUser = u; showPage('homePage');
-        if(u === ADMIN_USER) document.getElementById('adminBtn').style.display='block';
-        db.ref('users/'+u+'/balance').on('value', s => { curBalance = s.val()||0; document.getElementById('valBalance').innerText = curBalance.toLocaleString(); });
+        user = u; showPage('homePage');
+        if(u === ADM) document.getElementById('adminBtn').style.display='block';
+        db.ref('users/'+u+'/balance').on('value', s => { balance = s.val()||0; document.getElementById('valBalance').innerText = balance.toLocaleString(); });
         db.ref('orders').orderByChild('user').equalTo(u).on('value', s => {
             const h = document.getElementById('historyList'); h.innerHTML = "";
-            s.forEach(d => { h.innerHTML = `<div class="card-pro p-2 mb-2 small d-flex justify-content-between"><span>${d.val().item} - ${d.val().status}</span></div>` + h.innerHTML; });
+            s.forEach(d => { 
+                const v = d.val();
+                let statClass = v.status === 'PENDING' ? 'bg-pending' : (v.status === 'SUCCESS' ? 'bg-success' : 'bg-rejected');
+                h.innerHTML = `<div class="card-custom small d-flex justify-content-between align-items-center">
+                    <span><b>${v.item}</b><br><span class="opacity-50">${v.email}</span></span>
+                    <span class="status-badge ${statClass}">${v.status}</span>
+                </div>` + h.innerHTML; 
+            });
         });
     }
 
-    function selectItem(n, p, el) { 
-        document.querySelectorAll('.price-item').forEach(x => x.classList.remove('active'));
-        el.classList.add('active'); sPrice = p; sName = n;
-        document.getElementById('totalTxt').innerText = "Rp " + p.toLocaleString();
+    function setService(n, p) { item = n; price = p; document.getElementById('totalTxt').innerText = "Rp " + p.toLocaleString(); }
+    
+    function order() {
+        const e = document.getElementById('targetEmail').value;
+        if(!e || !price) return alert("Pilih layanan & isi email!");
+        if(balance < price) return alert("Saldo tidak mencukupi!");
+        db.ref('users/'+user).update({balance: balance - price});
+        db.ref('orders').push({user:user, email:e, item:item, status:'PENDING'});
+        alert("Pesanan terkirim!");
     }
 
-    function prosesOrder() {
-        const em = document.getElementById('targetEmail').value;
-        if(!em || !sPrice) return alert("Lengkapi!");
-        if(curBalance < sPrice) return alert("Saldo Kurang!");
-        db.ref('users/'+curUser).update({ balance: curBalance - sPrice });
-        db.ref('orders').push({ user: curUser, email: em, item: sName, status: 'PENDING' });
-        alert("Selesai!");
-    }
-
-    function reqT() {
-        const a = parseInt(document.getElementById('topupAmt').value);
-        if(!a) return alert("Isi Nominal!");
-        db.ref('topup_requests').push({ user: curUser, amount: a, status: 'PENDING' });
-        alert("Tiket Terkirim! Segera SS Bukti Transfer.");
+    function topup() {
+        const b = document.getElementById('tBank').value;
+        const s = document.getElementById('tSender').value;
+        const a = parseInt(document.getElementById('tAmt').value);
+        if(!s || !a) return alert("Lengkapi data konfirmasi!");
+        db.ref('topup_requests').push({user:user, bank:b, sender:s, amount:a, status:'PENDING'});
+        alert("Konfirmasi terkirim, tunggu admin ACC!");
     }
 
     function showPage(id) {
@@ -271,23 +262,38 @@
 
     function loadAdmin() {
         db.ref('topup_requests').on('value', s => {
-            const l = document.getElementById('adminDepoList'); l.innerHTML = "";
-            s.forEach(d => { if(d.val().status === 'PENDING') l.innerHTML += `<div class="card-pro p-2 mb-2 d-flex justify-content-between"><small>${d.val().user} - Rp${d.val().amount}</small><div><button class="btn btn-success btn-sm me-1" onclick="accD('${d.key}','${d.val().user}',${d.val().amount})">V</button><button class="btn btn-danger btn-sm" onclick="rejD('${d.key}')">X</button></div></div>`; });
+            const l = document.getElementById('admDepos'); l.innerHTML = "";
+            s.forEach(d => { 
+                const v = d.val();
+                if(v.status === 'PENDING') l.innerHTML += `<div class="card-custom d-flex justify-content-between align-items-center small">
+                    <span>${v.user}<br><b>Rp${v.amount}</b> (${v.bank})</span>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-success btn-sm" onclick="hD('${d.key}','${v.user}',${v.amount},'SUCCESS')"><i class="fas fa-check"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="hD('${d.key}','${v.user}',0,'REJECTED')"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>`;
+            });
         });
         db.ref('orders').on('value', s => {
-            const l = document.getElementById('adminOrderList'); l.innerHTML = "";
-            s.forEach(d => { if(d.val().status === 'PENDING') l.innerHTML += `<div class="card-pro p-2 mb-2 d-flex justify-content-between"><small>${d.val().user} - ${d.val().item}</small><div><button class="btn btn-success btn-sm me-1" onclick="accO('${d.key}')">V</button><button class="btn btn-danger btn-sm" onclick="rejO('${d.key}')">X</button></div></div>`; });
+            const l = document.getElementById('admOrders'); l.innerHTML = "";
+            s.forEach(d => { 
+                const v = d.val();
+                if(v.status === 'PENDING') l.innerHTML += `<div class="card-custom d-flex justify-content-between align-items-center small">
+                    <span><b>${v.email}</b><br>${v.item} - ${v.user}</span>
+                    <div class="d-flex gap-1">
+                        <button class="btn btn-success btn-sm" onclick="hO('${d.key}','SUCCESS')"><i class="fas fa-check"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="hO('${d.key}','REJECTED')"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>`;
+            });
         });
     }
 
-    function accD(k, u, a) { db.ref('users/'+u+'/balance').once('value', s => { db.ref('users/'+u).update({balance:(s.val()||0)+a}); db.ref('topup_requests/'+k).update({status:'SUCCESS'}); }); }
-    function rejD(k) { db.ref('topup_requests/'+k).update({status:'REJECTED'}); }
-    function accO(k) { db.ref('orders/'+k).update({status:'SUCCESS'}); }
-    function rejO(k) { db.ref('orders/'+k).update({status:'REJECTED'}); }
-    function setS() { db.ref('users/'+document.getElementById('targetU').value.toLowerCase()).update({balance:parseInt(document.getElementById('targetS').value)}); alert("Selesai!"); }
-    function banU(v) { db.ref('users/'+document.getElementById('targetU').value.toLowerCase()).update({isBanned:v}); alert("Update!"); }
-    function setInfo(v) { db.ref('settings/globalInfo').update({active:v, msg:document.getElementById('adminInfoMsg').value}); }
-    function updateRegKey() { db.ref('settings').update({regKey: document.getElementById('newRegKey').value}); alert("Key Update!"); }
+    function hD(k,u,a,s) { if(s==='SUCCESS'){ db.ref('users/'+u+'/balance').once('value', x=>{ db.ref('users/'+u).update({balance:(x.val()||0)+a}); db.ref('topup_requests/'+k).update({status:s}); }); } else { db.ref('topup_requests/'+k).update({status:s}); } }
+    function hO(k,s) { db.ref('orders/'+k).update({status:s}); }
+    function editS() { db.ref('users/'+document.getElementById('targetU').value.toLowerCase()).update({balance:parseInt(document.getElementById('nS').value)}); alert("Saldo Berhasil!"); }
+    function ban(v) { db.ref('users/'+document.getElementById('targetU').value.toLowerCase()).update({isBanned:v}); alert("Status User Diperbarui!"); }
+    function bc(v) { db.ref('settings/globalInfo').update({active:v, msg:document.getElementById('bcMsg').value}); alert("Broadcast Diperbarui!"); }
     function logout() { localStorage.clear(); location.reload(); }
     function toggleAuth(r) { document.getElementById('loginBox').style.display=r?'none':'block'; document.getElementById('regBox').style.display=r?'block':'none'; }
 </script>
